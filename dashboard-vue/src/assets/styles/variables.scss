@@ -1,0 +1,43 @@
+:root {
+  // 主色
+  --primary-color: #0066ff;
+  --primary-dark: #004ecc;
+  --primary-light: #409EFF;
+
+  // 背景
+  --bg-dark: #0a1628;
+  --bg-card: #12264a;
+  --bg-header: linear-gradient(90deg, #0a1628, #0d2347, #0a1628);
+
+  // 边框
+  --border-color: #2d4a7c;
+  --border-glow: rgba(0, 102, 255, 0.4);
+
+  // 文字
+  --text-primary: #ffffff;
+  --text-secondary: #a0aec0;
+  --text-accent: #00d4ff;
+
+  // 图表
+  --chart-blue: #409EFF;
+  --chart-green: #67C23A;
+  --chart-orange: #E6A23C;
+  --chart-red: #F56C6C;
+  --chart-gray: #909399;
+
+  // 字体
+  --font-title: 'Microsoft YaHei Bold', 'PingFang SC', sans-serif;
+  --font-number: 'DIN Alternate Bold', 'Arial', sans-serif;
+  --font-body: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+
+  // 间距
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+
+  // 圆角
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}

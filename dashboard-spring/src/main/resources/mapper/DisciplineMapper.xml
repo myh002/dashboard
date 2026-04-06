@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dashboard.mapper.DisciplineMapper">
+
+    <select id="getMetricValue" resultType="java.lang.Long">
+        SELECT IFNULL(s.value, 0)
+        FROM dept_stats s
+        WHERE s.dept_name = #{deptName} AND s.metric_id = #{metricId} AND s.year = #{year}
+        LIMIT 1
+    </select>
+
+    <select id="getMetricValueById" resultType="java.lang.Long">
+        SELECT IFNULL(s.value, 0)
+        FROM dept_stats s
+        WHERE s.metric_id = #{metricId} AND s.year = #{year}
+        LIMIT 1
+    </select>
+
+    <select id="getMetricSum" resultType="java.lang.Long">
+        SELECT IFNULL(SUM(s.value), 0)
+        FROM dept_stats s
+        WHERE s.dept_name = #{deptName}
+          AND s.metric_id IN
+          <foreach collection="metricIds" item="mid" open="(" separator="," close=")">
+              #{mid}
+          </foreach>
+          AND s.year = #{year}
+    </select>
+
+    <select id="getMetricsBatch" resultType="java.util.Map">
+        SELECT s.year, s.metric_id, IFNULL(s.value, 0) AS value
+        FROM dept_stats s
+        WHERE s.dept_name = #{deptName}
+          AND s.year IN
+          <foreach collection="years" item="y" open="(" separator="," close=")">
+              #{y}
+          </foreach>
+          AND s.metric_id IN
+          <foreach collection="metricIds" item="m" open="(" separator="," close=")">
+              #{m}
+          </foreach>
+    </select>
+
+</mapper>

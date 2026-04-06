@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dashboard.mapper.FacultyMapper">
+
+    <select id="getTotalStaff" resultType="java.lang.Long">
+        SELECT IFNULL(s.value, 0)
+        FROM dept_stats s
+        JOIN dict_metric m ON s.metric_id = m.id
+        WHERE m.metric_name = '教师总数' AND s.year = #{year}
+        LIMIT 1
+    </select>
+
+    <select id="getTotalTeachers" resultType="java.lang.Long">
+        SELECT IFNULL(s.value, 0)
+        FROM dept_stats s
+        JOIN dict_metric m ON s.metric_id = m.id
+        WHERE m.metric_name = '专任教师数' AND s.year = #{year}
+        LIMIT 1
+    </select>
+
+    <select id="getGraduateSupervisors" resultType="java.lang.Long">
+        SELECT IFNULL(SUM(s.value), 0)
+        FROM dept_stats s
+        WHERE s.metric_id IN (102, 103, 104, 105) AND s.year = #{year}
+    </select>
+
+    <select id="getTitleCount" resultType="java.lang.Long">
+        SELECT IFNULL(s.value, 0)
+        FROM dept_stats s
+        WHERE s.metric_id = #{metricId} AND s.year = #{year}
+        LIMIT 1
+    </select>
+
+    <select id="getSupervisorById" resultType="java.lang.Long">
+        SELECT IFNULL(s.value, 0)
+        FROM dept_stats s
+        WHERE s.metric_id = #{metricId} AND s.year = #{year}
+        LIMIT 1
+    </select>
+
+</mapper>

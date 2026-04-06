@@ -1,0 +1,1 @@
+import{f as e,h as t,t as n,z as r}from"./_plugin-vue_export-helper-COTpAk8i.js";var i={},a={class:`sub-page`};function o(n,i){return r(),t(`div`,a,[...i[0]||=[e(`div`,{class:`sub-page__icon`},`🛡️`,-1),e(`h1`,{class:`sub-page__title`},`校办`,-1),e(`p`,{class:`sub-page__hint`},`内容建设中...`,-1)]])}var s=n(i,[[`render`,o],[`__scopeId`,`data-v-b6579da8`]]);export{s as default};

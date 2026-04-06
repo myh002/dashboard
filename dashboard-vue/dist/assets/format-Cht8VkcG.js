@@ -1,0 +1,1 @@
+function e(e){return e==null||Number.isNaN(e)?`0`:e.toLocaleString(`zh-CN`)}function t(e){return e.toLocaleTimeString(`zh-CN`,{hour:`2-digit`,minute:`2-digit`,hour12:!1})}function n(e){return`${e.getFullYear()}/${e.getMonth()+1}/${e.getDate()}`}export{e as n,t as r,n as t};

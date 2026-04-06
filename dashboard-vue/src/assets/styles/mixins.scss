@@ -1,0 +1,36 @@
+@mixin card-style {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.15),
+              0 0 8px rgba(0, 102, 255, 0.1);
+}
+
+@mixin border-glow {
+  border: 1px solid var(--border-color);
+  box-shadow: 0 0 10px var(--border-glow),
+              inset 0 0 10px rgba(0, 102, 255, 0.05);
+}
+
+@mixin tech-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #0066ff, #00d4ff, transparent);
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin text-glow($color: var(--primary-color)) {
+  text-shadow: 0 0 10px $color, 0 0 20px rgba(0, 102, 255, 0.3);
+}
+
+@mixin number-style {
+  font-family: var(--font-number);
+  font-weight: bold;
+  color: var(--text-primary);
+}
