@@ -45,4 +45,4 @@ build/
 ### Mac OS ###
 .DS_Store
 
-dashboard/node_modules
+dashboard-vue/node_modules
