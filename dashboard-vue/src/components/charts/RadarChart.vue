@@ -42,6 +42,16 @@ const chartOption = computed(() => ({
     ...baseOption.tooltip,
     trigger: 'item' as const
   },
+  legend: {
+    show: true,
+    orient: 'vertical',
+    right: 10,
+    top: 'middle',
+    textStyle: {
+      color: '#a0aec0'
+    },
+    data: ['学位点结构']
+  },
   radar: {
     indicator: safeIndicators.value.map(ind => ({
       ...ind,
