@@ -44,7 +44,7 @@ const chartOption = computed(() => ({
   },
   legend: {
     show: true,
-    orient: 'vertical',
+    orient: 'vertical' as const,
     right: 10,
     top: 'middle',
     textStyle: {
