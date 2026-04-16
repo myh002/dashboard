@@ -7,6 +7,8 @@ public class YearlyDisciplineData {
     private String year;
     private DisciplinesData disciplines;
     private MajorsData majors;
+    private TeachingAchievementsData teachingAchievements;
+    private TitleDistributionData titleDistribution;
     private DegreePointsData degreePoints;
     private Integer colleges;
 
@@ -20,10 +22,8 @@ public class YearlyDisciplineData {
 
     @Data
     public static class MajorsData {
-        private Integer ministryFeature;
-        private Integer provincialFeature;
-        private Integer provincialDemonstration;
-        private Integer provincialQualityCourse;
+        private Integer undergraduateMale;
+        private Integer undergraduateFemale;
         private Integer undergraduateTotal;
         private Integer newThisYear;
         private Integer discontinued;
@@ -37,5 +37,20 @@ public class YearlyDisciplineData {
         private Integer masterSecond;
         private Integer professional;
         private Integer total;
+    }
+
+    @Data
+    public static class TeachingAchievementsData {
+        private Integer provincialTeachingAward;
+        private Integer provincialReformProject;
+        private Integer schoolReformProject;
+    }
+
+    @Data
+    public static class TitleDistributionData {
+        private Integer professorCount;
+        private Integer associateProfessorCount;
+        private Integer lecturerCount;
+        private Integer juniorCount;
     }
 }

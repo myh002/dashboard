@@ -42,7 +42,6 @@ export const useResearchStore = defineStore('research', {
       const data = state.yearlyData.find(d => d.year === state.selectedYear) || state.yearlyData[state.yearlyData.length - 1]
       if (!data) return []
       return [
-        { name: 'Nature/Science/Cell', value: data.papers.topTierJournals ?? 0 },
         { name: 'SCI一区', value: data.papers.sciQ1 ?? 0 },
         { name: 'SCI二区', value: data.papers.sciQ2 ?? 0 },
         { name: 'SCI三区', value: data.papers.sciQ3 ?? 0 },
@@ -103,6 +102,6 @@ function emptyYearData(): YearlyResearchData {
     funding: { vertical: 0, horizontal: 0, total: 0 },
     awards: { first: 0, second: 0, third: 0 },
     publications: { books: 0, patents: { invention: 0, utility: 0, design: 0 }, varieties: 0, standards: 0, software: 0, total: 0 },
-    papers: { topTierJournals: 0, sciQ1: 0, sciQ2: 0, sciQ3: 0, sciQ4: 0, ei: 0, cscd: 0, core: 0, other: 0, total: 0 }
+    papers: { sciQ1: 0, sciQ2: 0, sciQ3: 0, sciQ4: 0, ei: 0, cscd: 0, core: 0, other: 0, total: 0 }
   }
 }

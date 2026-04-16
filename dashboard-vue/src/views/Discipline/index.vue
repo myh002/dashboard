@@ -1,6 +1,6 @@
 <template>
   <DashboardLayout
-    title="学科建设总览"
+    title="科学建设总览"
     :years="years"
     :selectedYear="selectedYear"
     @yearChange="handleYearChange"
@@ -12,11 +12,11 @@
     </template>
 
     <template #left-bottom>
-      <SectionPanel :title="`${selectedYear}年专业类别构成`" border-type="box-1">
+      <SectionPanel :title="`${selectedYear}年本科生构成`" border-type="box-1">
         <DonutChart
           :data="majorChartData"
-          :centerValue="currentYearData.majors?.undergraduateTotal || 0"
-          centerLabel="本科专业总数"
+          :centerValue="(currentYearData.majors?.undergraduateMale || 0) + (currentYearData.majors?.undergraduateFemale || 0)"
+          centerLabel="本科生总数"
           height="100%"
         />
       </SectionPanel>
@@ -60,28 +60,24 @@
             <p>学位点布局方面，博士后流动站 <span class="highlight">{{ currentYearData.degreePoints?.postdoctoral || 0 }}</span> 个、一级博点 <span class="highlight">{{ currentYearData.degreePoints?.doctoralFirst || 0 }}</span> 个、一级硕点 <span class="highlight">{{ currentYearData.degreePoints?.masterFirst || 0 }}</span> 个、二级硕点 <span class="highlight">{{ currentYearData.degreePoints?.masterSecond || 0 }}</span> 个、专业硕点 <span class="highlight">{{ currentYearData.degreePoints?.professional || 0 }}</span> 个，学位层次结构完善。</p>
           </div>
           <div class="analysis-item">
-            <p>专业建设方面，本科专业总数达 <span class="highlight">{{ currentYearData.majors?.undergraduateTotal || 0 }}</span> 个，其中教育部特色专业 <span class="highlight">{{ currentYearData.majors?.ministryFeature || 0 }}</span> 个、省级特色专业 <span class="highlight">{{ currentYearData.majors?.provincialFeature || 0 }}</span> 个、省级示范专业 <span class="highlight">{{ currentYearData.majors?.provincialDemonstration || 0 }}</span> 个，专业建设成效显著。</p>
+            <p>学生构成方面，本科男生 <span class="highlight">{{ currentYearData.majors?.undergraduateMale || 0 }}</span> 人、本科女生 <span class="highlight">{{ currentYearData.majors?.undergraduateFemale || 0 }}</span> 人，形成良好的学科专业协同发展格局。</p>
           </div>
           <div class="analysis-item">
-            <p>课程建设方面，拥有省级精品课程 <span class="highlight">{{ currentYearData.majors?.provincialQualityCourse || 0 }}</span> 门，当年新增专业 <span class="highlight">{{ currentYearData.majors?.newThisYear || 0 }}</span> 个，形成 <span class="highlight">{{ currentYearData.colleges || 0 }}</span> 个学院的学科专业协同发展格局。</p>
+            <p>教学成果方面，拥有省级教学成果奖 <span class="highlight">{{ currentYearData.teachingAchievements?.provincialTeachingAward || 0 }}</span> 个、省级教改工程项目 <span class="highlight">{{ currentYearData.teachingAchievements?.provincialReformProject || 0 }}</span> 个、校级教改工程项目 <span class="highlight">{{ currentYearData.teachingAchievements?.schoolReformProject || 0 }}</span> 个，形成 <span class="highlight">{{ currentYearData.colleges || 0 }}</span> 个学院的学科专业协同发展格局。</p>
           </div>
         </div>
       </div>
     </template>
 
     <template #right-top>
-      <SectionPanel :title="`${selectedYear}年学位点结构`" border-type="box-10">
-        <RadarChart
-          :indicators="degreeRadarData.indicators"
-          :values="degreeRadarData.values"
-          height="100%"
-        />
+      <SectionPanel :title="`${selectedYear}年职称分布`" border-type="box-10">
+        <BarChart :data="titleDistributionChartData" height="100%" />
       </SectionPanel>
     </template>
 
     <template #right-bottom>
-      <SectionPanel :title="`${selectedYear}年特色专业占比`" border-type="box-1">
-        <PieChart :data="featureMajorChartData" height="100%" />
+      <SectionPanel :title="`${selectedYear}年教学成果分布`" border-type="box-1">
+        <PieChart :data="teachingAchievementsChartData" height="100%" />
       </SectionPanel>
     </template>
   </DashboardLayout>
@@ -94,7 +90,6 @@ import DashboardLayout from '@/components/layout/DashboardLayout.vue'
 import SectionPanel from '@/components/common/SectionPanel.vue'
 import BarChart from '@/components/charts/BarChart.vue'
 import DonutChart from '@/components/charts/DonutChart.vue'
-import RadarChart from '@/components/charts/RadarChart.vue'
 import PieChart from '@/components/charts/PieChart.vue'
 
 const disciplineStore = useDisciplineStore()
@@ -109,8 +104,8 @@ const currentYearData = computed(() => disciplineStore.currentYearData)
 
 const disciplineChartData = computed(() => disciplineStore.disciplineChartData)
 const majorChartData = computed(() => disciplineStore.majorChartData)
-const degreeRadarData = computed(() => disciplineStore.degreeRadarData)
-const featureMajorChartData = computed(() => disciplineStore.featureMajorChartData)
+const titleDistributionChartData = computed(() => disciplineStore.titleDistributionChartData)
+const teachingAchievementsChartData = computed(() => disciplineStore.teachingAchievementsChartData)
 
 const doctoralAndMasterTotal = computed(() => {
   const dp = currentYearData.value.degreePoints

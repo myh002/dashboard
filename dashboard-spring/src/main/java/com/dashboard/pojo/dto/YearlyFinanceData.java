@@ -35,8 +35,8 @@ public class YearlyFinanceData {
 
     @Data
     public static class LibraryData {
-        private Double bookTotal;
-        private Integer ebookCount;
-        private Integer ejournalCount;
+        private Long bookCount;
+        private Long ebookCount;
+        private Long ejournalCount;
     }
 }

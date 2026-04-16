@@ -27,33 +27,33 @@ public class FacultyServiceImpl implements FacultyService {
         data.setTotalTeachers(totalTeachers != null ? totalTeachers.intValue() : 0);
         data.setGraduateSupervisors(graduateSupervisors != null ? graduateSupervisors.intValue() : 0);
 
-        // 职称分布（人事处 metrics 30-34）
+        // 职称分布（人事处 metrics 50-54）
         FacultyData.TitleDistribution title = new FacultyData.TitleDistribution();
-        title.setSeniorTitle(intOf(facultyMapper.getTitleCount(year, 30))); // 正高级
-        title.setSeniorHigh(intOf(facultyMapper.getTitleCount(year, 31)));   // 副高级
-        title.setMiddle(intOf(facultyMapper.getTitleCount(year, 32)));        // 中级
-        title.setJunior(intOf(facultyMapper.getTitleCount(year, 33)));        // 初级及其他
-        title.setSeniorTech(intOf(facultyMapper.getTitleCount(year, 34)));    // 外聘教师
+        title.setSeniorTitle(intOf(facultyMapper.getTitleCount(year, 50))); // 正高级
+        title.setSeniorHigh(intOf(facultyMapper.getTitleCount(year, 51)));   // 副高级
+        title.setMiddle(intOf(facultyMapper.getTitleCount(year, 52)));        // 中级
+        title.setJunior(intOf(facultyMapper.getTitleCount(year, 53)));        // 初级及其他
+        title.setSeniorTech(intOf(facultyMapper.getTitleCount(year, 54)));    // 外聘教师
         data.setTitleDistribution(title);
 
-        // 高层次人才/团队（教务处 metrics 91-96）
+        // 高层次人才/团队（教务处 metrics 100, 102）
         // 新增 = 本年数据 - 上一年数据（若无上一年数据则为0）
         List<FacultyData.TalentItem> topTalents = new ArrayList<>();
-        int professorCount = intOf(facultyMapper.getTitleCount(year, 30));
-        int professorPrev = intOf(facultyMapper.getTitleCount(year - 1, 30));
-        topTalents.add(buildItem("教授", professorCount, professorCount - professorPrev, "UserFilled"));
+        int professorCount = intOf(facultyMapper.getTitleCount(year, 50));
+        int professorPrev = intOf(facultyMapper.getTitleCount(year - 1, 50));
+        topTalents.add(buildItem("教授", professorCount, professorCount - professorPrev, "UserFilled", "人"));
 
-        int associateProfessorCount = intOf(facultyMapper.getTitleCount(year, 31));
-        int associateProfessorPrev = intOf(facultyMapper.getTitleCount(year - 1, 31));
-        topTalents.add(buildItem("副教授", associateProfessorCount, associateProfessorCount - associateProfessorPrev, "User"));
+        int associateProfessorCount = intOf(facultyMapper.getTitleCount(year, 51));
+        int associateProfessorPrev = intOf(facultyMapper.getTitleCount(year - 1, 51));
+        topTalents.add(buildItem("副教授", associateProfessorCount, associateProfessorCount - associateProfessorPrev, "User", "人"));
 
-        int nationalTeamCount = intOf(facultyMapper.getTitleCount(year, 95));
-        int nationalTeamPrev = intOf(facultyMapper.getTitleCount(year - 1, 95));
-        topTalents.add(buildItem("国家级教学团队", nationalTeamCount, nationalTeamCount - nationalTeamPrev, "Trophy"));
+        int nationalTeamCount = intOf(facultyMapper.getTitleCount(year, 103));
+        int nationalTeamPrev = intOf(facultyMapper.getTitleCount(year - 1, 103));
+        topTalents.add(buildItem("省级教学成果奖", nationalTeamCount, nationalTeamCount - nationalTeamPrev, "Trophy", "项"));
 
-        int provincialTeamCount = intOf(facultyMapper.getTitleCount(year, 96));
-        int provincialTeamPrev = intOf(facultyMapper.getTitleCount(year - 1, 96));
-        topTalents.add(buildItem("省级教学团队", provincialTeamCount, provincialTeamCount - provincialTeamPrev, "Star"));
+        int provincialTeamCount = intOf(facultyMapper.getTitleCount(year, 105));
+        int provincialTeamPrev = intOf(facultyMapper.getTitleCount(year - 1, 105));
+        topTalents.add(buildItem("省级教改工程项目", provincialTeamCount, provincialTeamCount - provincialTeamPrev, "Star", "项"));
 
         data.setTopTalents(topTalents);
         return data;
@@ -63,12 +63,13 @@ public class FacultyServiceImpl implements FacultyService {
         return v != null ? v.intValue() : 0;
     }
 
-    private FacultyData.TalentItem buildItem(String category, int count, int increment, String icon) {
+    private FacultyData.TalentItem buildItem(String category, int count, int increment, String icon, String unit) {
         FacultyData.TalentItem item = new FacultyData.TalentItem();
         item.setCategory(category);
         item.setCount(count);
         item.setNewIncrement(increment);
         item.setIcon(icon);
+        item.setUnit(unit);
         return item;
     }
 }

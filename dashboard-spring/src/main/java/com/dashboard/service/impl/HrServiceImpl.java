@@ -14,10 +14,10 @@ public class HrServiceImpl implements HrService {
 
     private final HrMapper hrMapper;
 
-    private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024, 2025};
+    private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024};
 
-    private static final List<Integer> RENSHICHU_METRIC_IDS = Arrays.asList(23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34);
-    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(91, 92, 93, 94, 95, 96);
+    private static final List<Integer> RENSHICHU_METRIC_IDS = Arrays.asList(42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54);
+    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(97, 98, 99, 100, 101, 102);
 
     @Override
     @Cacheable(value = "hr", key = "'yearly'")
@@ -68,32 +68,32 @@ public class HrServiceImpl implements HrService {
         Map<Integer, Long> jiaowuchuMetrics = allMetrics.get("教务处").get(year);
 
         YearlyHrData.StaffData staff = new YearlyHrData.StaffData();
-        staff.setTotal(intOf(getMetricValue(renshichuMetrics, 23)));
-        staff.setFullTime(intOf(getMetricValue(renshichuMetrics, 24)));
-        staff.setManagement(intOf(getMetricValue(renshichuMetrics, 25)));
-        staff.setSupporting(intOf(getMetricValue(renshichuMetrics, 26)));
-        staff.setExternal(intOf(getMetricValue(renshichuMetrics, 34)));
+        staff.setTotal(intOf(getMetricValue(renshichuMetrics, 42)));
+        staff.setFullTime(intOf(getMetricValue(renshichuMetrics, 43)));
+        staff.setManagement(intOf(getMetricValue(renshichuMetrics, 44)));
+        staff.setSupporting(intOf(getMetricValue(renshichuMetrics, 45)));
+        staff.setExternal(intOf(getMetricValue(renshichuMetrics, 54)));
         data.setStaff(staff);
 
         YearlyHrData.EducationData edu = new YearlyHrData.EducationData();
-        edu.setDoctorate(intOf(getMetricValue(renshichuMetrics, 27)));
-        edu.setMaster(intOf(getMetricValue(renshichuMetrics, 28)));
-        edu.setBachelor(intOf(getMetricValue(renshichuMetrics, 29)));
+        edu.setDoctorate(intOf(getMetricValue(renshichuMetrics, 47)));
+        edu.setMaster(intOf(getMetricValue(renshichuMetrics, 48)));
+        edu.setBachelor(intOf(getMetricValue(renshichuMetrics, 49)));
         data.setEducation(edu);
 
         YearlyHrData.TitleData title = new YearlyHrData.TitleData();
-        title.setProfessor(intOf(getMetricValue(renshichuMetrics, 30)));
-        title.setAssociate(intOf(getMetricValue(renshichuMetrics, 31)));
-        title.setLecturer(intOf(getMetricValue(renshichuMetrics, 32)));
-        title.setAssistant(intOf(getMetricValue(renshichuMetrics, 33)));
+        title.setProfessor(intOf(getMetricValue(renshichuMetrics, 50)));
+        title.setAssociate(intOf(getMetricValue(renshichuMetrics, 51)));
+        title.setLecturer(intOf(getMetricValue(renshichuMetrics, 52)));
+        title.setAssistant(intOf(getMetricValue(renshichuMetrics, 53)));
         data.setTitle(title);
 
         YearlyHrData.TalentsData talents = new YearlyHrData.TalentsData();
-        talents.setNationalMaster(intOf(getMetricValue(jiaowuchuMetrics, 91)));
-        talents.setProvincialMaster(intOf(getMetricValue(jiaowuchuMetrics, 92)));
-        talents.setHuangdanianTeam(intOf(getMetricValue(jiaowuchuMetrics, 93)));
-        talents.setNationalTeam(intOf(getMetricValue(jiaowuchuMetrics, 94)));
-        talents.setProvincialTeam(intOf(getMetricValue(jiaowuchuMetrics, 96)));
+        talents.setNationalMaster(intOf(getMetricValue(jiaowuchuMetrics, 97)));
+        talents.setProvincialMaster(intOf(getMetricValue(jiaowuchuMetrics, 98)));
+        talents.setHuangdanianTeam(intOf(getMetricValue(jiaowuchuMetrics, 99)));
+        talents.setNationalTeam(intOf(getMetricValue(jiaowuchuMetrics, 100)));
+        talents.setProvincialTeam(intOf(getMetricValue(jiaowuchuMetrics, 102)));
         data.setTalents(talents);
 
         return data;

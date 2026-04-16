@@ -10,6 +10,7 @@ export interface TalentItem {
   count: number
   newIncrement?: number
   icon?: string
+  unit: string
 }
 
 /** 师资队伍数据 */
@@ -194,7 +195,6 @@ export interface AwardsData {
 
 /** 论文数据 */
 export interface PapersData {
-  topTierJournals: number
   sciQ1: number
   sciQ2: number
   sciQ3: number
@@ -245,13 +245,26 @@ export interface DisciplinesData {
 
 /** 专业数据 */
 export interface MajorsData {
-  ministryFeature: number
-  provincialFeature: number
-  provincialDemonstration: number
-  provincialQualityCourse: number
+  undergraduateMale: number
+  undergraduateFemale: number
   undergraduateTotal: number
   newThisYear: number
   discontinued: number
+}
+
+/** 教学成果数据 */
+export interface TeachingAchievementsData {
+  provincialTeachingAward: number
+  provincialReformProject: number
+  schoolReformProject: number
+}
+
+/** 职称分布数据 */
+export interface TitleDistributionData {
+  professorCount: number
+  associateProfessorCount: number
+  lecturerCount: number
+  juniorCount: number
 }
 
 /** 学位点数据 */
@@ -269,6 +282,8 @@ export interface YearlyDisciplineData {
   year: string
   disciplines: DisciplinesData
   majors: MajorsData
+  teachingAchievements: TeachingAchievementsData
+  titleDistribution: TitleDistributionData
   degreePoints: DegreePointsData
   colleges: number
 }
@@ -529,9 +544,9 @@ export interface FinanceResearchData {
 
 /** 图书馆数据 */
 export interface LibraryData {
-  bookTotal: number | null
-  ebookCount: number
-  ejournalCount: number
+  bookCount: number | null
+  ebookCount: number | null
+  ejournalCount: number | null
 }
 
 /** 单年份财政资产数据 */
@@ -540,6 +555,7 @@ export interface YearlyFinanceData {
   campus: CampusData
   assets: AssetsData
   research: FinanceResearchData
+  library: LibraryData
 }
 
 /** 财政资产状态 */

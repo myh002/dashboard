@@ -12,9 +12,11 @@ const props = withDefaults(defineProps<{
   data: Array<{ name: string; value: number }>
   centerValue?: number
   centerLabel?: string
+  unit?: string
   height?: string
 }>(), {
-  height: '220px'
+  height: '220px',
+  unit: ''
 })
 
 const { baseOption, chartColors } = useChartTheme()
@@ -36,7 +38,7 @@ const chartOption = computed(() => ({
   tooltip: {
     ...baseOption.tooltip,
     trigger: 'item' as const,
-    formatter: safeData.value.length > 0 ? '{b}: {c} ({d}%)' : '暂无数据'
+    formatter: safeData.value.length > 0 ? `{b}: {c}${props.unit} ({d}%)` : '暂无数据'
   },
   legend: {
     show: false

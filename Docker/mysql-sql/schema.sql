@@ -48,7 +48,7 @@ CREATE TABLE `dept_stats` (
     `id`              BIGINT          NOT NULL AUTO_INCREMENT  COMMENT '主键ID',
     `dept_name`       VARCHAR(100)    NOT NULL                 COMMENT '部门名称',
     `metric_id`       INT             NOT NULL                 COMMENT '指标ID',
-    `year`            INT             NOT NULL                 COMMENT '统计年份',
+    `year`            INT                              COMMENT '统计年份',
     `value`           DECIMAL(15,2)   NOT NULL DEFAULT 0       COMMENT '指标数值',
     `created_at`      DATETIME        DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at`      DATETIME        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

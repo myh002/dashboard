@@ -14,13 +14,13 @@ public class ServiceServiceImpl implements ServiceService {
 
     private final ServiceMapper serviceMapper;
 
-    private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024, 2025};
+    private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024};
 
-    private static final List<Integer> KEJICHU_METRIC_IDS = Arrays.asList(12, 17, 18, 21, 22);
-    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(81, 82, 101);
-    private static final List<Integer> YANJIUSHENGYUAN_METRIC_IDS = Arrays.asList(128, 129, 130, 131);
-    private static final List<Integer> WAISHIBAN_METRIC_IDS = Arrays.asList(132, 133);
-    private static final List<Integer> RENSHICHU_METRIC_IDS = Arrays.asList(34);
+    private static final List<Integer> KEJICHU_METRIC_IDS = Arrays.asList(23, 36, 37, 40, 41);
+    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(87, 88, 107);
+    private static final List<Integer> YANJIUSHENGYUAN_METRIC_IDS = Arrays.asList(128, 129);
+    private static final List<Integer> GUOJIJIAOYU_METRIC_IDS = Arrays.asList(1, 2);
+    private static final List<Integer> RENSHICHU_METRIC_IDS = Arrays.asList(54);
 
     @Override
     @Cacheable(value = "service", key = "'yearly'")
@@ -40,7 +40,7 @@ public class ServiceServiceImpl implements ServiceService {
         result.put("科技处", loadDeptMetrics("科技处", KEJICHU_METRIC_IDS));
         result.put("教务处", loadDeptMetrics("教务处", JIAOWUCHU_METRIC_IDS));
         result.put("研究生院", loadDeptMetrics("研究生院", YANJIUSHENGYUAN_METRIC_IDS));
-        result.put("外事办、国际教育学院", loadDeptMetrics("外事办、国际教育学院", WAISHIBAN_METRIC_IDS));
+        result.put("国际教育学院", loadDeptMetrics("国际教育学院", GUOJIJIAOYU_METRIC_IDS));
         result.put("人事处", loadDeptMetrics("人事处", RENSHICHU_METRIC_IDS));
 
         return result;
@@ -73,34 +73,34 @@ public class ServiceServiceImpl implements ServiceService {
         Map<Integer, Long> kejichuMetrics = allMetrics.get("科技处").get(year);
         Map<Integer, Long> jiaowuchuMetrics = allMetrics.get("教务处").get(year);
         Map<Integer, Long> yanjiushengyuanMetrics = allMetrics.get("研究生院").get(year);
-        Map<Integer, Long> waishibanMetrics = allMetrics.get("外事办、国际教育学院").get(year);
+        Map<Integer, Long> guojijiaoyuMetrics = allMetrics.get("国际教育学院").get(year);
         Map<Integer, Long> renshichuMetrics = allMetrics.get("人事处").get(year);
 
         YearlyServiceData.CooperationData coop = new YearlyServiceData.CooperationData();
-        coop.setHorizontalFunding(getMetricValue(kejichuMetrics, 12) / 100.0);
-        coop.setInventionPatents(intOf(getMetricValue(kejichuMetrics, 17)));
-        coop.setUtilityPatents(intOf(getMetricValue(kejichuMetrics, 18)));
-        coop.setStandards(intOf(getMetricValue(kejichuMetrics, 21)));
-        coop.setSoftware(intOf(getMetricValue(kejichuMetrics, 22)));
+        coop.setHorizontalFunding(getMetricValue(kejichuMetrics, 23) / 1.0);
+        coop.setInventionPatents(intOf(getMetricValue(kejichuMetrics, 36)));
+        coop.setUtilityPatents(intOf(getMetricValue(kejichuMetrics, 37)));
+        coop.setStandards(intOf(getMetricValue(kejichuMetrics, 40)));
+        coop.setSoftware(intOf(getMetricValue(kejichuMetrics, 41)));
         data.setCooperation(coop);
 
         YearlyServiceData.EmploymentData emp = new YearlyServiceData.EmploymentData();
-        emp.setUndergraduate(intOf(getMetricValue(jiaowuchuMetrics, 81)));
-        emp.setUndergraduateRate(getMetricValue(jiaowuchuMetrics, 82) / 1.0);
-        emp.setMaster(intOf(getMetricValue(yanjiushengyuanMetrics, 130)));
-        emp.setMasterRate(getMetricValue(yanjiushengyuanMetrics, 131) / 1.0);
+        emp.setUndergraduate(intOf(getMetricValue(jiaowuchuMetrics, 87)));
+        emp.setUndergraduateRate(getMetricValue(jiaowuchuMetrics, 88) / 1.0);
+        emp.setMaster(intOf(getMetricValue(yanjiushengyuanMetrics, 128)));
+        emp.setMasterRate(getMetricValue(yanjiushengyuanMetrics, 129) / 1.0);
         emp.setPhd(intOf(getMetricValue(yanjiushengyuanMetrics, 128)));
         emp.setPhdRate(getMetricValue(yanjiushengyuanMetrics, 129) / 1.0);
         data.setEmployment(emp);
 
         YearlyServiceData.InternationalData intl = new YearlyServiceData.InternationalData();
-        intl.setInternationalStudents(intOf(getMetricValue(waishibanMetrics, 133)));
-        intl.setCooperativePrograms(intOf(getMetricValue(waishibanMetrics, 132)));
-        intl.setPracticeBases(intOf(getMetricValue(jiaowuchuMetrics, 101)));
+        intl.setInternationalStudents(intOf(getMetricValue(guojijiaoyuMetrics, 2)));
+        intl.setCooperativePrograms(intOf(getMetricValue(guojijiaoyuMetrics, 1)));
+        intl.setPracticeBases(intOf(getMetricValue(jiaowuchuMetrics, 107)));
         data.setInternational(intl);
 
         YearlyServiceData.ExpertsData experts = new YearlyServiceData.ExpertsData();
-        experts.setExternalTeachers(intOf(getMetricValue(renshichuMetrics, 34)));
+        experts.setExternalTeachers(intOf(getMetricValue(renshichuMetrics, 54)));
         data.setExperts(experts);
 
         return data;

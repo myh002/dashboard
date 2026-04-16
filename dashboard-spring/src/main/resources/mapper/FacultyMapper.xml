@@ -6,7 +6,7 @@
         SELECT IFNULL(s.value, 0)
         FROM dept_stats s
         JOIN dict_metric m ON s.metric_id = m.id
-        WHERE m.metric_name = '教师总数' AND s.year = #{year}
+        WHERE m.metric_name = '总教师数' AND s.year = #{year}
         LIMIT 1
     </select>
 
@@ -21,7 +21,7 @@
     <select id="getGraduateSupervisors" resultType="java.lang.Long">
         SELECT IFNULL(SUM(s.value), 0)
         FROM dept_stats s
-        WHERE s.metric_id IN (102, 103, 104, 105) AND s.year = #{year}
+        WHERE s.metric_id IN (108, 109) AND s.year = #{year}
     </select>
 
     <select id="getTitleCount" resultType="java.lang.Long">

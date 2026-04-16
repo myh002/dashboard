@@ -14,11 +14,12 @@ public class FinanceServiceImpl implements FinanceService {
 
     private final FinanceMapper financeMapper;
 
-    private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024, 2025};
+    private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024};
 
-    private static final List<Integer> CAMPUS_METRIC_IDS = Arrays.asList(134, 135, 136, 137);
-    private static final List<Integer> ASSETS_METRIC_IDS = Arrays.asList(138, 139, 140, 141, 142);
-    private static final List<Integer> RESEARCH_METRIC_IDS = Arrays.asList(11, 12);
+    private static final List<Integer> CAMPUS_METRIC_IDS = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11);
+    private static final List<Integer> ASSETS_METRIC_IDS = Arrays.asList(7, 8, 9, 10, 11);
+    private static final List<Integer> RESEARCH_METRIC_IDS = Arrays.asList(22, 23);
+    private static final List<Integer> LIBRARY_METRIC_IDS = Arrays.asList(130, 131, 132);
 
     @Override
     @Cacheable(value = "finance", key = "'yearly'")
@@ -35,8 +36,9 @@ public class FinanceServiceImpl implements FinanceService {
     private Map<String, Map<Integer, Map<Integer, Long>>> loadAllMetrics() {
         Map<String, Map<Integer, Map<Integer, Long>>> result = new HashMap<>();
         
-        result.put("国资处", loadDeptMetrics("国资处", Arrays.asList(134, 135, 136, 137, 138, 139, 140, 141, 142)));
+        result.put("国资处", loadDeptMetrics("国资处", CAMPUS_METRIC_IDS));
         result.put("科技处", loadDeptMetrics("科技处", RESEARCH_METRIC_IDS));
+        result.put("图书馆", loadDeptMetrics("图书馆", LIBRARY_METRIC_IDS));
         
         return result;
     }
@@ -67,26 +69,33 @@ public class FinanceServiceImpl implements FinanceService {
 
         Map<Integer, Long> guoziMetrics = allMetrics.get("国资处").get(year);
         Map<Integer, Long> kejichuMetrics = allMetrics.get("科技处").get(year);
+        Map<Integer, Long> tushuguanMetrics = allMetrics.get("图书馆").get(year);
 
         YearlyFinanceData.CampusData campus = new YearlyFinanceData.CampusData();
-        campus.setSchoolArea(getMetricValue(guoziMetrics, 134) / 1.0);
-        campus.setTeachingArea(getMetricValue(guoziMetrics, 135) / 1.0);
-        campus.setLabArea(getMetricValue(guoziMetrics, 136) / 1.0);
-        campus.setDormitoryArea(getMetricValue(guoziMetrics, 137) / 1.0);
-        campus.setHorizontalFunding(getMetricValue(kejichuMetrics, 12) / 1.0);
+        campus.setSchoolArea(getMetricValue(guoziMetrics, 3) / 1.0);
+        campus.setTeachingArea(getMetricValue(guoziMetrics, 4) / 1.0);
+        campus.setLabArea(getMetricValue(guoziMetrics, 5) / 1.0);
+        campus.setDormitoryArea(getMetricValue(guoziMetrics, 6) / 1.0);
+        campus.setHorizontalFunding(getMetricValue(kejichuMetrics, 23) / 1.0);
         data.setCampus(campus);
 
         YearlyFinanceData.AssetsData assets = new YearlyFinanceData.AssetsData();
-        assets.setFixedAssets(longOf(getMetricValue(guoziMetrics, 138)));
-        assets.setEquipmentCount(intOf(getMetricValue(guoziMetrics, 139)));
-        assets.setEquipmentValue(getMetricValue(guoziMetrics, 140) / 1.0);
-        assets.setLargeEquipmentCount(intOf(getMetricValue(guoziMetrics, 141)));
-        assets.setLargeEquipmentValue(getMetricValue(guoziMetrics, 142) / 1.0);
+        assets.setFixedAssets(longOf(getMetricValue(guoziMetrics, 7)));
+        assets.setEquipmentCount(intOf(getMetricValue(guoziMetrics, 8)));
+        assets.setEquipmentValue(getMetricValue(guoziMetrics, 9) / 1.0);
+        assets.setLargeEquipmentCount(intOf(getMetricValue(guoziMetrics, 10)));
+        assets.setLargeEquipmentValue(getMetricValue(guoziMetrics, 11) / 1.0);
         data.setAssets(assets);
 
         YearlyFinanceData.ResearchData research = new YearlyFinanceData.ResearchData();
-        research.setVerticalFunding(getMetricValue(kejichuMetrics, 11) / 1.0);
+        research.setVerticalFunding(getMetricValue(kejichuMetrics, 22) / 1.0);
         data.setResearch(research);
+
+        YearlyFinanceData.LibraryData library = new YearlyFinanceData.LibraryData();
+        library.setBookCount(getMetricValue(tushuguanMetrics, 130));
+        library.setEbookCount(getMetricValue(tushuguanMetrics, 131));
+        library.setEjournalCount(getMetricValue(tushuguanMetrics, 132));
+        data.setLibrary(library);
 
         return data;
     }

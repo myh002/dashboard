@@ -19,7 +19,7 @@ public class FacultyController {
 
     @GetMapping
     public ResultData<FacultyData> getFaculty(
-            @RequestParam(defaultValue = "2025")
+            @RequestParam(defaultValue = "2024")
             @Min(value = 2000, message = "年份不能小于2000")
             @Max(value = 2100, message = "年份不能大于2100") Integer year) {
         return ResultData.success(facultyService.getFacultyData(year));

@@ -41,7 +41,7 @@
                   <div class="talent-info">
                     <span class="talent-category">{{ item.category }}</span>
                     <div class="talent-data">
-                      <span class="talent-count">{{ formatNumber(item.count) }} 人</span>
+                      <span class="talent-count">{{ formatNumber(item.count) }} {{ item.unit }}</span>
                       <span class="talent-increment">
                         +{{ item.newIncrement || 0 }}
                         <span class="arrow-up">↑</span>
@@ -65,10 +65,10 @@
             </div>
           </div>
           <div class="card-row card-row--4">
-            <DataCard mode="dual" title="公开发布论文" :lastYear="research.papers.lastYear" :newThisYear="research.papers.newThisYear" />
-            <DataCard mode="dual" title="出版著作" :lastYear="research.publications.lastYear" :newThisYear="research.publications.newThisYear" />
-            <DataCard mode="dual" title="专利" :lastYear="research.patents.lastYear" :newThisYear="research.patents.newThisYear" />
-            <DataCard mode="dual" title="基地" :lastYear="research.bases.lastYear" :newThisYear="research.bases.newThisYear" />
+            <DataCard mode="dual" title="公开发布论文" :lastYear="research.papers.lastYear" :newThisYear="research.papers.newThisYear" unit="篇" />
+            <DataCard mode="dual" title="出版著作" :lastYear="research.publications.lastYear" :newThisYear="research.publications.newThisYear" unit="部" />
+            <DataCard mode="dual" title="专利" :lastYear="research.patents.lastYear" :newThisYear="research.patents.newThisYear" unit="项" />
+            <DataCard mode="dual" title="科研平台" :lastYear="research.bases.lastYear" :newThisYear="research.bases.newThisYear" unit="个" />
           </div>
           <div class="dual-panel">
             <div class="dual-left">
@@ -99,14 +99,14 @@
                 <div class="stats-item">
                   <div class="stats-icon">📊</div>
                   <div class="stats-info">
-                    <span class="stats-label">地厅级项目</span>
+                    <span class="stats-label">厅局级项目</span>
                     <span class="stats-value">{{ formatNumber(research.projectStats.prefectural) }} 个</span>
                   </div>
                 </div>
                 <div class="stats-item">
                   <div class="stats-icon">📊</div>
                   <div class="stats-info">
-                    <span class="stats-label">院级项目</span>
+                    <span class="stats-label">校级项目</span>
                     <span class="stats-value">{{ formatNumber(research.projectStats.institutional) }} 个</span>
                   </div>
                 </div>
@@ -129,12 +129,12 @@
             <div class="section-title">科学建设</div>
           </div>
           <div class="card-row card-row--4">
-            <DataCard mode="simple" title="学位点" :value="discipline.degreePoints" />
+            <DataCard mode="simple" title="硕博学位点" :value="discipline.degreePoints" />
             <DataCard mode="simple" title="省一流专业" :value="discipline.firstClassMajors" />
-            <DataCard mode="simple" title="ESI 前 1% 学科" :value="discipline.esiDisciplines" />
-            <DataCard mode="simple" title="省一流学科" :value="discipline.firstClassDisciplines" />
+            <DataCard mode="simple" title="省级教学成果奖" :value="discipline.esiDisciplines" />
+            <DataCard mode="simple" title="教改工程项目" :value="discipline.firstClassDisciplines" />
           </div>
-          <div class="chart-title chart-title--center">学科评估分布</div>
+          <div class="chart-title chart-title--center">论文发表分布</div>
           <BarChart :data="evaluationChartData" height="100%" />
         </div>
       </dv-border-box-10>
@@ -170,8 +170,8 @@
             <div class="metric-card metric-card--icon">
               <div class="metric-card-icon">📝</div>
               <div>
-                <div class="metric-label">课程数</div>
-                <div class="metric-value">{{ talent.courseCount }}<span class="metric-unit">个</span></div>
+                <div class="metric-label">省级教改工程项目</div>
+                <div class="metric-value">{{ talent.courseCount }}<span class="metric-unit">项</span></div>
               </div>
             </div>
           </div>
@@ -244,10 +244,10 @@
             </div>
           </div>
           <div class="card-row card-row--4">
-            <DataCard mode="dual" title="占地面积" :lastYear="condition.landArea.lastYear" :newThisYear="condition.landArea.newThisYear" />
-            <DataCard mode="dual" title="实验室面积" :lastYear="condition.labArea.lastYear" :newThisYear="condition.labArea.newThisYear" />
-            <DataCard mode="dual" title="教学行政面积" :lastYear="condition.teachingAdminArea.lastYear" :newThisYear="condition.teachingAdminArea.newThisYear" />
-            <DataCard mode="dual" title="固有资产" :lastYear="condition.fixedAssets.lastYear" :newThisYear="condition.fixedAssets.newThisYear" />
+            <DataCard mode="dual" title="占地面积" :lastYear="condition.landArea.lastYear" :newThisYear="condition.landArea.newThisYear" unit="亩" />
+            <DataCard mode="dual" title="实验室面积" :lastYear="condition.labArea.lastYear" :newThisYear="condition.labArea.newThisYear" unit="万m²" />
+            <DataCard mode="dual" title="学生宿舍面积" :lastYear="condition.teachingAdminArea.lastYear" :newThisYear="condition.teachingAdminArea.newThisYear" unit="万m²" />
+            <DataCard mode="dual" title="固有资产" :lastYear="condition.fixedAssets.lastYear" :newThisYear="condition.fixedAssets.newThisYear" unit="万元" />
           </div>
           <div class="dual-panel">
             <div class="dual-left">
@@ -256,7 +256,7 @@
                 <div class="stats-item">
                   <div class="stats-icon">🏫</div>
                   <div class="stats-info">
-                    <span class="stats-label">教学规模面积</span>
+                    <span class="stats-label">教学行政用房</span>
                     <span class="stats-value">{{ formatNumber(condition.assetOverview.teachingResearchArea) }} 万m²</span>
                   </div>
                 </div>
@@ -270,8 +270,8 @@
                 <div class="stats-item">
                   <div class="stats-icon">📚</div>
                   <div class="stats-info">
-                    <span class="stats-label">图书总量</span>
-                    <span class="stats-value">{{ formatNumber(condition.assetOverview.bookTotal) }} 万本</span>
+                    <span class="stats-label">图书数量</span>
+                    <span class="stats-value">{{ formatNumber(condition.assetOverview.bookTotal) }} 册</span>
                   </div>
                 </div>
                 <div class="stats-item">

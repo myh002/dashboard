@@ -21,7 +21,8 @@ export const useFinanceStore = defineStore('finance', {
           year: state.selectedYear,
           campus: { schoolArea: null, teachingArea: null, labArea: null, dormitoryArea: null, horizontalFunding: 0 },
           assets: { fixedAssets: null, equipmentCount: 0, equipmentValue: 0, largeEquipmentCount: 0, largeEquipmentValue: 0 },
-          research: { verticalFunding: 0 }
+          research: { verticalFunding: 0 },
+          library: { bookCount: null, ebookCount: null, ejournalCount: null }
         }
       }
       return found
@@ -40,8 +41,8 @@ export const useFinanceStore = defineStore('finance', {
       const data = state.yearlyData.find(d => d.year === state.selectedYear) || state.yearlyData[state.yearlyData.length - 1]
       if (!data) return []
       return [
-        { name: '教学行政', value: data.campus.teachingArea ?? 0 },
-        { name: '实验室', value: data.campus.labArea ?? 0 },
+        { name: '教学行政用房', value: data.campus.teachingArea ?? 0 },
+        { name: '实验室用房', value: data.campus.labArea ?? 0 },
         { name: '学生宿舍', value: data.campus.dormitoryArea ?? 0 }
       ]
     },
@@ -59,6 +60,25 @@ export const useFinanceStore = defineStore('finance', {
       return [
         { name: '大型设备', value: data.assets.largeEquipmentCount ?? 0 },
         { name: '普通设备', value: (data.assets.equipmentCount ?? 0) - (data.assets.largeEquipmentCount ?? 0) }
+      ]
+    },
+    equipmentDetailChartData: (state) => {
+      const data = state.yearlyData.find(d => d.year === state.selectedYear) || state.yearlyData[state.yearlyData.length - 1]
+      if (!data) return []
+      return [
+        { name: '教学科研设备数(台)', value: data.assets.equipmentCount ?? 0 },
+        { name: '教学科研设备原值(万元)', value: Math.round((data.assets.equipmentValue ?? 0) * 100) / 100 },
+        { name: '50万元以上设备数(台)', value: data.assets.largeEquipmentCount ?? 0 },
+        { name: '50万元以上设备原值(万元)', value: Math.round((data.assets.largeEquipmentValue ?? 0) * 100) / 100 }
+      ]
+    },
+    libraryChartData: (state) => {
+      const data = state.yearlyData.find(d => d.year === state.selectedYear) || state.yearlyData[state.yearlyData.length - 1]
+      if (!data) return []
+      return [
+        { name: '图书数量（册）', value: data.library.bookCount ?? 0 },
+        { name: '电子图书(种)', value: data.library.ebookCount ?? 0 },
+        { name: '电子期刊(种)', value: data.library.ejournalCount ?? 0 }
       ]
     }
   },

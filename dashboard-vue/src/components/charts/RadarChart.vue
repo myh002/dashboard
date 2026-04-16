@@ -16,11 +16,17 @@ const props = withDefaults(defineProps<{
   indicators: Indicator[]
   values: number[]
   height?: string
+  name?: string
 }>(), {
-  height: '220px'
+  height: '220px',
+  name: ''
 })
 
 const { baseOption, createGradient, chartColors } = useChartTheme()
+
+const chartName = computed(() => {
+  return props.name || (props.indicators?.[0]?.name ? '数据分布' : '')
+})
 
 const safeIndicators = computed(() => {
   if (!props.indicators || !Array.isArray(props.indicators)) {
@@ -36,6 +42,10 @@ const safeValues = computed(() => {
   return props.values.map(v => (v === null || v === undefined || isNaN(v)) ? 0 : v)
 })
 
+const hasData = computed(() => {
+  return safeIndicators.value.length > 0 && safeValues.value.length > 0
+})
+
 const chartOption = computed(() => ({
   ...baseOption,
   tooltip: {
@@ -43,14 +53,14 @@ const chartOption = computed(() => ({
     trigger: 'item' as const
   },
   legend: {
-    show: true,
+    show: hasData.value,
     orient: 'vertical' as const,
     right: 10,
     top: 'middle',
     textStyle: {
       color: '#a0aec0'
     },
-    data: ['学位点结构']
+    data: hasData.value ? [chartName.value] : []
   },
   radar: {
     indicator: safeIndicators.value.map(ind => ({
@@ -85,9 +95,9 @@ const chartOption = computed(() => ({
   },
   series: [{
     type: 'radar' as const,
-    data: safeIndicators.value.length > 0 && safeValues.value.length > 0 ? [{
+    data: hasData.value ? [{
       value: safeValues.value,
-      name: '学位点结构',
+      name: chartName.value,
       symbol: 'circle',
       symbolSize: 6,
       lineStyle: {

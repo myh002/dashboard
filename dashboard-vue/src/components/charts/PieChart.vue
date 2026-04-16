@@ -9,8 +9,10 @@ import BaseChart from '@/components/common/BaseChart.vue'
 const props = withDefaults(defineProps<{
   data: Array<{ name: string; value: number }>
   height?: string
+  unit?: string
 }>(), {
-  height: '220px'
+  height: '220px',
+  unit: ''
 })
 
 const chartOption = computed(() => {
@@ -41,24 +43,15 @@ const chartOption = computed(() => {
       backgroundColor: 'rgba(12, 30, 60, 0.9)',
       borderColor: '#00d4ff',
       textStyle: { color: '#ffffff' },
-      formatter: safeData.length > 0 ? '{b}: {c} ({d}%)' : '暂无数据'
+      formatter: safeData.length > 0 ? `{b}: {c}${props.unit} ({d}%)` : '暂无数据'
     },
     legend: {
-      orient: 'vertical' as const,
-      right: '5%',
-      top: 'center',
-      textStyle: {
-        color: '#a0aec0',
-        fontSize: 11
-      },
-      itemWidth: 12,
-      itemHeight: 12,
-      itemGap: 8
+      show: false
     },
     series: [{
       type: 'pie' as const,
       radius: ['40%', '65%'],
-      center: ['35%', '50%'],
+      center: ['50%', '50%'],
       avoidLabelOverlap: true,
       itemStyle: {
         borderRadius: 6,

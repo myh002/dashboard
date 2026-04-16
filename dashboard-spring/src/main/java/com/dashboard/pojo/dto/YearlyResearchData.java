@@ -63,7 +63,6 @@ public class YearlyResearchData {
 
     @Data
     public static class PapersData {
-        private Integer topTierJournals;
         private Integer sciQ1;
         private Integer sciQ2;
         private Integer sciQ3;

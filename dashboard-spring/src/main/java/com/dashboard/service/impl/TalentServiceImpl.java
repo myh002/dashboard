@@ -15,35 +15,35 @@ public class TalentServiceImpl implements TalentService {
 
     private final TalentMapper talentMapper;
 
-    private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024, 2025};
+    private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024};
 
-    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(47, 65, 66, 72, 75, 76, 77, 78, 81, 82, 97, 98, 99, 100, 101);
-    private static final List<Integer> YANJIUSHENGYUAN_METRIC_IDS = Arrays.asList(102, 103, 104, 105, 106, 107, 108, 109, 120, 121, 122, 123, 128, 129, 130, 131);
-    private static final List<Integer> WAISHIBAN_METRIC_IDS = Arrays.asList(132, 133);
+    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(67, 71, 72, 78, 81, 82, 83, 84, 87, 88, 97, 98, 103, 104, 105, 106, 107);
+    private static final List<Integer> YANJIUSHENGYUAN_METRIC_IDS = Arrays.asList(108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 124, 125, 126, 127, 128, 129);
+    private static final List<Integer> GUOJIJIAOYU_METRIC_IDS = Arrays.asList(1, 2);
 
     @Override
     @Cacheable(value = "talent", key = "'single-' + #year")
     public TalentData getTalentData(Integer year) {
         TalentData data = new TalentData();
 
-        data.setDepartmentCount(intOf(talentMapper.getMetricValue("校办", 47, year)));
-        data.setMajorCount(intOf(talentMapper.getMetricValue("教务处", 72, year)));
-        data.setCourseCount(intOf(talentMapper.getMetricValue("教务处", 75, year)));
+        data.setDepartmentCount(intOf(talentMapper.getMetricValue("校办", 67, year)));
+        data.setMajorCount(intOf(talentMapper.getMetricValue("教务处", 78, year)));
+        data.setCourseCount(intOf(talentMapper.getMetricValue("教务处", 105, year)));
 
         TalentData.StudentStats stats = new TalentData.StudentStats();
-        int underMale = intOf(talentMapper.getMetricValue("教务处", 65, year));
-        int underFemale = intOf(talentMapper.getMetricValue("教务处", 66, year));
-        int masterMale = intOf(talentMapper.getMetricValue("研究生院", 106, year));
-        int masterFemale = intOf(talentMapper.getMetricValue("研究生院", 107, year));
-        int phdMale = intOf(talentMapper.getMetricValue("研究生院", 108, year));
-        int phdFemale = intOf(talentMapper.getMetricValue("研究生院", 109, year));
+        int underMale = intOf(talentMapper.getMetricValue("教务处", 71, year));
+        int underFemale = intOf(talentMapper.getMetricValue("教务处", 72, year));
+        int masterMale = intOf(talentMapper.getMetricValue("研究生院", 110, year));
+        int masterFemale = intOf(talentMapper.getMetricValue("研究生院", 111, year));
+        int phdMale = intOf(talentMapper.getMetricValue("研究生院", 112, year));
+        int phdFemale = intOf(talentMapper.getMetricValue("研究生院", 113, year));
 
-        int underMaleLast = intOf(talentMapper.getMetricValue("教务处", 65, year - 1));
-        int underFemaleLast = intOf(talentMapper.getMetricValue("教务处", 66, year - 1));
-        int masterMaleLast = intOf(talentMapper.getMetricValue("研究生院", 106, year - 1));
-        int masterFemaleLast = intOf(talentMapper.getMetricValue("研究生院", 107, year - 1));
-        int phdMaleLast = intOf(talentMapper.getMetricValue("研究生院", 108, year - 1));
-        int phdFemaleLast = intOf(talentMapper.getMetricValue("研究生院", 109, year - 1));
+        int underMaleLast = intOf(talentMapper.getMetricValue("教务处", 71, year - 1));
+        int underFemaleLast = intOf(talentMapper.getMetricValue("教务处", 72, year - 1));
+        int masterMaleLast = intOf(talentMapper.getMetricValue("研究生院", 110, year - 1));
+        int masterFemaleLast = intOf(talentMapper.getMetricValue("研究生院", 111, year - 1));
+        int phdMaleLast = intOf(talentMapper.getMetricValue("研究生院", 112, year - 1));
+        int phdFemaleLast = intOf(talentMapper.getMetricValue("研究生院", 113, year - 1));
 
         int underTotal = underMale + underFemale;
         int underTotalLast = underMaleLast + underFemaleLast;
@@ -88,7 +88,7 @@ public class TalentServiceImpl implements TalentService {
 
         result.put("教务处", loadDeptMetrics("教务处", JIAOWUCHU_METRIC_IDS));
         result.put("研究生院", loadDeptMetrics("研究生院", YANJIUSHENGYUAN_METRIC_IDS));
-        result.put("外事办、国际教育学院", loadDeptMetrics("外事办、国际教育学院", WAISHIBAN_METRIC_IDS));
+        result.put("国际教育学院", loadDeptMetrics("国际教育学院", GUOJIJIAOYU_METRIC_IDS));
 
         return result;
     }
@@ -119,59 +119,53 @@ public class TalentServiceImpl implements TalentService {
 
         Map<Integer, Long> jiaowuchuMetrics = allMetrics.get("教务处").get(year);
         Map<Integer, Long> yanjiushengyuanMetrics = allMetrics.get("研究生院").get(year);
-        Map<Integer, Long> waishibanMetrics = allMetrics.get("外事办、国际教育学院").get(year);
+        Map<Integer, Long> guojijiaoyuMetrics = allMetrics.get("国际教育学院").get(year);
 
         YearlyTalentData.UndergraduateData under = new YearlyTalentData.UndergraduateData();
-        under.setMale(intOf(getMetricValue(jiaowuchuMetrics, 65)));
-        under.setFemale(intOf(getMetricValue(jiaowuchuMetrics, 66)));
+        under.setMale(intOf(getMetricValue(jiaowuchuMetrics, 71)));
+        under.setFemale(intOf(getMetricValue(jiaowuchuMetrics, 72)));
         under.setTotal(under.getMale() + under.getFemale());
-        under.setGraduates(intOf(getMetricValue(jiaowuchuMetrics, 77)));
-        under.setGraduateRate(getMetricValue(jiaowuchuMetrics, 78) / 1.0);
-        under.setEmployment(intOf(getMetricValue(jiaowuchuMetrics, 81)));
-        under.setEmploymentRate(getMetricValue(jiaowuchuMetrics, 82) / 1.0);
+        under.setGraduates(intOf(getMetricValue(jiaowuchuMetrics, 83)));
+        under.setGraduateRate(getMetricValue(jiaowuchuMetrics, 84) / 1.0);
+        under.setEmployment(intOf(getMetricValue(jiaowuchuMetrics, 87)));
+        under.setEmploymentRate(getMetricValue(jiaowuchuMetrics, 88) / 1.0);
         data.setUndergraduate(under);
 
         YearlyTalentData.MasterData master = new YearlyTalentData.MasterData();
-        master.setMale(intOf(getMetricValue(yanjiushengyuanMetrics, 106)));
-        master.setFemale(intOf(getMetricValue(yanjiushengyuanMetrics, 107)));
+        master.setMale(intOf(getMetricValue(yanjiushengyuanMetrics, 110)));
+        master.setFemale(intOf(getMetricValue(yanjiushengyuanMetrics, 111)));
         master.setTotal(master.getMale() + master.getFemale());
-        master.setSupervisors(
-                intOf(getMetricValue(yanjiushengyuanMetrics, 102))
-                + intOf(getMetricValue(yanjiushengyuanMetrics, 103))
-        );
-        master.setGraduates(intOf(getMetricValue(yanjiushengyuanMetrics, 122)));
-        master.setGraduateRate(getMetricValue(yanjiushengyuanMetrics, 123) / 1.0);
-        master.setEmployment(intOf(getMetricValue(yanjiushengyuanMetrics, 130)));
-        master.setEmploymentRate(getMetricValue(yanjiushengyuanMetrics, 131) / 1.0);
+        master.setSupervisors(intOf(getMetricValue(yanjiushengyuanMetrics, 108)));
+        master.setGraduates(intOf(getMetricValue(yanjiushengyuanMetrics, 124)));
+        master.setGraduateRate(getMetricValue(yanjiushengyuanMetrics, 125) / 1.0);
+        master.setEmployment(intOf(getMetricValue(yanjiushengyuanMetrics, 128)));
+        master.setEmploymentRate(getMetricValue(yanjiushengyuanMetrics, 129) / 1.0);
         data.setMaster(master);
 
         YearlyTalentData.PhdData phd = new YearlyTalentData.PhdData();
-        phd.setMale(intOf(getMetricValue(yanjiushengyuanMetrics, 108)));
-        phd.setFemale(intOf(getMetricValue(yanjiushengyuanMetrics, 109)));
+        phd.setMale(intOf(getMetricValue(yanjiushengyuanMetrics, 112)));
+        phd.setFemale(intOf(getMetricValue(yanjiushengyuanMetrics, 113)));
         phd.setTotal(phd.getMale() + phd.getFemale());
-        phd.setSupervisors(
-                intOf(getMetricValue(yanjiushengyuanMetrics, 104))
-                + intOf(getMetricValue(yanjiushengyuanMetrics, 105))
-        );
-        phd.setGraduates(intOf(getMetricValue(yanjiushengyuanMetrics, 120)));
-        phd.setGraduateRate(getMetricValue(yanjiushengyuanMetrics, 121) / 1.0);
+        phd.setSupervisors(intOf(getMetricValue(yanjiushengyuanMetrics, 109)));
+        phd.setGraduates(intOf(getMetricValue(yanjiushengyuanMetrics, 124)));
+        phd.setGraduateRate(getMetricValue(yanjiushengyuanMetrics, 125) / 1.0);
         phd.setEmployment(intOf(getMetricValue(yanjiushengyuanMetrics, 128)));
         phd.setEmploymentRate(getMetricValue(yanjiushengyuanMetrics, 129) / 1.0);
         data.setPhd(phd);
 
         YearlyTalentData.TeachingData teaching = new YearlyTalentData.TeachingData();
-        teaching.setCourses(intOf(getMetricValue(jiaowuchuMetrics, 75)));
-        teaching.setProfessorCourses(intOf(getMetricValue(jiaowuchuMetrics, 76)));
-        teaching.setNationalReform(intOf(getMetricValue(jiaowuchuMetrics, 98)));
-        teaching.setProvincialReform(intOf(getMetricValue(jiaowuchuMetrics, 99)));
-        teaching.setSchoolReform(intOf(getMetricValue(jiaowuchuMetrics, 100)));
-        teaching.setTeachingAward(intOf(getMetricValue(jiaowuchuMetrics, 97)));
-        teaching.setPracticeBases(intOf(getMetricValue(jiaowuchuMetrics, 101)));
+        teaching.setCourses(intOf(getMetricValue(jiaowuchuMetrics, 81)));
+        teaching.setProfessorCourses(intOf(getMetricValue(jiaowuchuMetrics, 82)));
+        teaching.setNationalReform(intOf(getMetricValue(jiaowuchuMetrics, 104)));
+        teaching.setProvincialReform(intOf(getMetricValue(jiaowuchuMetrics, 105)));
+        teaching.setSchoolReform(intOf(getMetricValue(jiaowuchuMetrics, 106)));
+        teaching.setTeachingAward(intOf(getMetricValue(jiaowuchuMetrics, 103)));
+        teaching.setPracticeBases(intOf(getMetricValue(jiaowuchuMetrics, 107)));
         data.setTeaching(teaching);
 
         YearlyTalentData.InternationalData intl = new YearlyTalentData.InternationalData();
-        intl.setCooperativePrograms(intOf(getMetricValue(waishibanMetrics, 132)));
-        intl.setInternationalStudents(intOf(getMetricValue(waishibanMetrics, 133)));
+        intl.setCooperativePrograms(intOf(getMetricValue(guojijiaoyuMetrics, 1)));
+        intl.setInternationalStudents(intOf(getMetricValue(guojijiaoyuMetrics, 2)));
         data.setInternational(intl);
 
         return data;

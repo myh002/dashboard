@@ -6,8 +6,8 @@
     @yearChange="handleYearChange"
   >
     <template #left-top>
-      <SectionPanel :title="`${selectedYear}年固定资产构成`" border-type="box-10">
-        <BarChart :data="assetsChartData" height="100%" />
+      <SectionPanel :title="`${selectedYear}年图书馆资源构成`" border-type="box-10">
+        <DonutChart :data="libraryChartData" height="100%" />
       </SectionPanel>
     </template>
 
@@ -17,6 +17,7 @@
           :data="campusChartData"
           :centerValue="currentYearData.campus.schoolArea ?? 0"
           centerLabel="学校面积(亩)"
+          unit="万平方米"
           height="100%"
         />
       </SectionPanel>
@@ -68,13 +69,13 @@
 
     <template #right-top>
       <SectionPanel :title="`${selectedYear}年科研经费来源`" border-type="box-10">
-        <PieChart :data="fundingChartData" height="100%" />
+        <PieChart :data="fundingChartData" unit="万元" height="100%" />
       </SectionPanel>
     </template>
 
     <template #right-bottom>
-      <SectionPanel :title="`${selectedYear}年仪器设备占比`" border-type="box-1">
-        <PieChart :data="equipmentChartData" height="100%" />
+      <SectionPanel :title="`${selectedYear}年仪器设备明细`" border-type="box-1">
+        <BarChart :data="equipmentDetailChartData" height="100%" />
       </SectionPanel>
     </template>
   </DashboardLayout>
@@ -104,6 +105,8 @@ const assetsChartData = computed(() => financeStore.assetsChartData)
 const campusChartData = computed(() => financeStore.campusChartData)
 const fundingChartData = computed(() => financeStore.fundingChartData)
 const equipmentChartData = computed(() => financeStore.equipmentChartData)
+const equipmentDetailChartData = computed(() => financeStore.equipmentDetailChartData)
+const libraryChartData = computed(() => financeStore.libraryChartData)
 
 const handleYearChange = (year: string) => {
   financeStore.setYear(year)

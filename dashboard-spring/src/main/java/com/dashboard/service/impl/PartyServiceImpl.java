@@ -14,12 +14,12 @@ public class PartyServiceImpl implements PartyService {
 
     private final PartyMapper partyMapper;
 
-    private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024, 2025};
+    private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024};
 
-    private static final List<Integer> ZUZHIBU_METRIC_IDS = Arrays.asList(48);
-    private static final List<Integer> TONGZHANBU_METRIC_IDS = Arrays.asList(39, 40, 41, 42, 43, 44, 45, 46);
-    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(67, 68, 70, 71, 93, 95, 96);
-    private static final List<Integer> YANJIUSHENGYUAN_METRIC_IDS = Arrays.asList(110, 111, 113, 114);
+    private static final List<Integer> ZUZHIBU_METRIC_IDS = Arrays.asList(68);
+    private static final List<Integer> TONGZHANBU_METRIC_IDS = Arrays.asList(59, 60, 61, 62, 63, 64, 65, 66);
+    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(73, 74, 76, 77, 101, 102);
+    private static final List<Integer> YANJIUSHENGYUAN_METRIC_IDS = Arrays.asList(114, 115, 117, 118);
 
     @Override
     @Cacheable(value = "party", key = "'yearly'")
@@ -74,37 +74,37 @@ public class PartyServiceImpl implements PartyService {
         Map<Integer, Long> yanjiushengyuanMetrics = allMetrics.get("研究生院").get(year);
 
         YearlyPartyData.PartyMembersData members = new YearlyPartyData.PartyMembersData();
-        members.setTotal(intOf(getMetricValue(zuzhibuMetrics, 48)));
-        members.setUndergraduate(intOf(getMetricValue(jiaowuchuMetrics, 67)));
-        members.setGraduate(intOf(getMetricValue(yanjiushengyuanMetrics, 110)));
+        members.setTotal(intOf(getMetricValue(zuzhibuMetrics, 68)));
+        members.setUndergraduate(intOf(getMetricValue(jiaowuchuMetrics, 73)));
+        members.setGraduate(intOf(getMetricValue(yanjiushengyuanMetrics, 114)));
         data.setPartyMembers(members);
 
         YearlyPartyData.DemocraticPartiesData dp = new YearlyPartyData.DemocraticPartiesData();
-        dp.setRevolutionary(intOf(getMetricValue(tongzhanbuMetrics, 39)));
-        dp.setLeague(intOf(getMetricValue(tongzhanbuMetrics, 40)));
-        dp.setConstruction(intOf(getMetricValue(tongzhanbuMetrics, 41)));
-        dp.setProgress(intOf(getMetricValue(tongzhanbuMetrics, 42)));
-        dp.setFarmersWorkers(intOf(getMetricValue(tongzhanbuMetrics, 43)));
-        dp.setZhiGong(intOf(getMetricValue(tongzhanbuMetrics, 44)));
-        dp.setJiuSan(intOf(getMetricValue(tongzhanbuMetrics, 45)));
-        dp.setTaiwanLeague(intOf(getMetricValue(tongzhanbuMetrics, 46)));
+        dp.setRevolutionary(intOf(getMetricValue(tongzhanbuMetrics, 59)));
+        dp.setLeague(intOf(getMetricValue(tongzhanbuMetrics, 60)));
+        dp.setConstruction(intOf(getMetricValue(tongzhanbuMetrics, 61)));
+        dp.setProgress(intOf(getMetricValue(tongzhanbuMetrics, 62)));
+        dp.setFarmersWorkers(intOf(getMetricValue(tongzhanbuMetrics, 63)));
+        dp.setZhiGong(intOf(getMetricValue(tongzhanbuMetrics, 64)));
+        dp.setJiuSan(intOf(getMetricValue(tongzhanbuMetrics, 65)));
+        dp.setTaiwanLeague(intOf(getMetricValue(tongzhanbuMetrics, 66)));
         data.setDemocraticParties(dp);
 
         YearlyPartyData.YouthLeagueData yl = new YearlyPartyData.YouthLeagueData();
-        yl.setUndergraduate(intOf(getMetricValue(jiaowuchuMetrics, 68)));
-        yl.setGraduate(intOf(getMetricValue(yanjiushengyuanMetrics, 111)));
+        yl.setUndergraduate(intOf(getMetricValue(jiaowuchuMetrics, 74)));
+        yl.setGraduate(intOf(getMetricValue(yanjiushengyuanMetrics, 115)));
         data.setYouthLeague(yl);
 
         YearlyPartyData.SpecialGroupsData sg = new YearlyPartyData.SpecialGroupsData();
-        sg.setMinority(intOf(getMetricValue(jiaowuchuMetrics, 70))
-                + intOf(getMetricValue(yanjiushengyuanMetrics, 113)));
-        sg.setDisabled(intOf(getMetricValue(jiaowuchuMetrics, 71))
-                + intOf(getMetricValue(yanjiushengyuanMetrics, 114)));
+        sg.setMinority(intOf(getMetricValue(jiaowuchuMetrics, 76))
+                + intOf(getMetricValue(yanjiushengyuanMetrics, 117)));
+        sg.setDisabled(intOf(getMetricValue(jiaowuchuMetrics, 77))
+                + intOf(getMetricValue(yanjiushengyuanMetrics, 118)));
         data.setSpecialGroups(sg);
 
         YearlyPartyData.IdeologicalTeamsData it = new YearlyPartyData.IdeologicalTeamsData();
-        it.setNationalTeam(intOf(getMetricValue(jiaowuchuMetrics, 95)));
-        it.setProvincialTeam(intOf(getMetricValue(jiaowuchuMetrics, 96)));
+        it.setNationalTeam(intOf(getMetricValue(jiaowuchuMetrics, 101)));
+        it.setProvincialTeam(intOf(getMetricValue(jiaowuchuMetrics, 102)));
         data.setIdeologicalTeams(it);
 
         return data;

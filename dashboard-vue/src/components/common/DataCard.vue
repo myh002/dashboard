@@ -11,13 +11,19 @@
       <div class="data-card__dual">
         <div class="data-card__row">
           <span class="data-card__label">上年度</span>
-          <span class="data-card__number">{{ formattedLastYear }}</span>
+          <div class="data-card__value">
+            <span class="data-card__number">{{ formattedLastYear }}</span>
+            <span v-if="unit" class="data-card__unit">{{ unit }}</span>
+          </div>
         </div>
         <div class="data-card__row">
           <span class="data-card__label">今年新增</span>
-          <span :class="['data-card__number', 'data-card__number--accent', getIncrementClass(newThisYear)]">
-            {{ formatIncrementValue(newThisYear) }}<span :class="getArrowClass(newThisYear)">{{ (newThisYear ?? 0) >= 0 ? '↑' : '↓' }}</span>
-          </span>
+          <div class="data-card__value">
+            <span :class="['data-card__number', 'data-card__number--accent', getIncrementClass(newThisYear)]">
+              {{ formatIncrementValue(newThisYear) }}<span :class="getArrowClass(newThisYear)">{{ (newThisYear ?? 0) >= 0 ? '↑' : '↓' }}</span>
+            </span>
+            <span v-if="unit" class="data-card__unit">{{ unit }}</span>
+          </div>
         </div>
       </div>
     </template>
@@ -69,7 +75,7 @@ function getArrowClass(value: number | undefined): string {
 .data-card {
   @include card-style;
   min-width: 0;
-  padding: 8px 10px;
+  padding: 8px 3px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -89,7 +95,7 @@ function getArrowClass(value: number | undefined): string {
 
   &__number {
     @include number-style;
-    font-size: 22px;
+    font-size: 14px;
 
     &--accent {
       color: var(--text-accent);

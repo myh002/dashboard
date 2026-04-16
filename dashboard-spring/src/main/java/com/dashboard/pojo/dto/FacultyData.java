@@ -26,5 +26,6 @@ public class FacultyData {
         private Integer count;
         private Integer newIncrement;
         private String icon;
+        private String unit;
     }
 }

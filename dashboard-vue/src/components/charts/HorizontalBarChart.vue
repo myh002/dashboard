@@ -10,14 +10,28 @@ import { useChartTheme } from '@/composables/useChartTheme'
 const props = withDefaults(defineProps<{
   data: Array<{ name: string; value: number }>
   height?: string
+  unit?: string
 }>(), {
-  height: '220px'
+  height: '220px',
+  unit: '篇'
 })
 
 const { baseOption, createGradient, chartColors } = useChartTheme()
 
+const safeData = computed(() => Array.isArray(props.data) ? props.data : [])
+
 const chartOption = computed(() => ({
   ...baseOption,
+  tooltip: {
+    trigger: 'axis' as const,
+    axisPointer: { type: 'shadow' as const },
+    backgroundColor: 'rgba(12, 30, 60, 0.9)',
+    borderColor: '#00d4ff',
+    textStyle: { color: '#ffffff' },
+    formatter: safeData.value.length > 0 
+      ? (params: any) => `${params[0].name}: ${params[0].value}${props.unit}`
+      : '暂无数据'
+  },
   xAxis: {
     type: 'value' as const,
     axisLabel: { color: '#a0aec0', fontSize: 11 },

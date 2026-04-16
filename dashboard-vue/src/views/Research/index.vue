@@ -17,6 +17,7 @@
           :data="fundingChartData"
           :centerValue="currentYearData.funding.total"
           centerLabel="总经费(万)"
+          unit="万元"
           height="100%"
         />
       </SectionPanel>
@@ -57,7 +58,7 @@
             <p>在科研经费方面，纵向经费占比达 <span class="highlight">{{ fundingRatio }}%</span>，体现学校对基础研究的重视。国家级和部级高层次项目共 <span class="highlight">{{ highLevelProjects }}</span> 项，厅局级项目 <span class="highlight">{{ currentYearData.projects.prefectural }}</span> 项，校级项目 <span class="highlight">{{ currentYearData.projects.school }}</span> 项，科研竞争力持续提升。</p>
           </div>
           <div class="analysis-item">
-            <p>高水平论文方面，在 Nature/Science/Cell 等顶刊发表论文 <span class="highlight">{{ currentYearData.papers.topTierJournals }}</span> 篇，SCI 一区论文 <span class="highlight">{{ currentYearData.papers.sciQ1 }}</span> 篇、二区 <span class="highlight">{{ currentYearData.papers.sciQ2 }}</span> 篇，EI 论文 <span class="highlight">{{ currentYearData.papers.ei }}</span> 篇，科研影响力显著增强。</p>
+            <p>高水平论文方面，SCI 一区论文 <span class="highlight">{{ currentYearData.papers.sciQ1 }}</span> 篇、二区 <span class="highlight">{{ currentYearData.papers.sciQ2 }}</span> 篇，EI 论文 <span class="highlight">{{ currentYearData.papers.ei }}</span> 篇，科研影响力显著增强。</p>
           </div>
           <div class="analysis-item">
             <p>知识产权转化活跃，共获批知识产权 <span class="highlight">{{ currentYearData.publications.total }}</span> 项，其中发明专利 <span class="highlight">{{ currentYearData.publications.patents.invention }}</span> 项、实用新型 <span class="highlight">{{ currentYearData.publications.patents.utility }}</span> 项，软件著作权 <span class="highlight">{{ currentYearData.publications.software }}</span> 项，产学研合作成效显著。</p>
@@ -77,7 +78,7 @@
 
     <template #right-bottom>
       <SectionPanel :title="`${selectedYear}年知识产权构成`" border-type="box-1">
-        <PieChart :data="patentChartData" height="100%" />
+        <PieChart :data="patentChartData" unit="项" height="100%" />
       </SectionPanel>
     </template>
   </DashboardLayout>

@@ -17,40 +17,40 @@ public class ConditionServiceImpl implements ConditionService {
     public ConditionData getConditionData(Integer year) {
         ConditionData data = new ConditionData();
 
-        // 学校面积 (国资处 metric 134)
+        // 学校面积 (国资处 metric 3)
         data.setLandArea(buildDualYear(
-                intOf(conditionMapper.getMetricValue("国资处", 134, year - 1)),
-                intOf(conditionMapper.getMetricValue("国资处", 134, year))
+                intOf(conditionMapper.getMetricValue("国资处", 3, year - 1)),
+                intOf(conditionMapper.getMetricValue("国资处", 3, year))
         ));
 
-        // 实验室面积 (国资处 metric 136)
+        // 实验室面积 (国资处 metric 6)
         data.setLabArea(buildDualYear(
-                intOf(conditionMapper.getMetricValue("国资处", 136, year - 1)),
-                intOf(conditionMapper.getMetricValue("国资处", 136, year))
+                intOf(conditionMapper.getMetricValue("国资处", 6, year - 1)),
+                intOf(conditionMapper.getMetricValue("国资处", 6, year))
         ));
 
-        // 教学行政用房 (国资处 metric 135)
+        // 教学行政用房 (国资处 metric 5)
         data.setTeachingAdminArea(buildDualYear(
-                intOf(conditionMapper.getMetricValue("国资处", 135, year - 1)),
-                intOf(conditionMapper.getMetricValue("国资处", 135, year))
+                intOf(conditionMapper.getMetricValue("国资处", 5, year - 1)),
+                intOf(conditionMapper.getMetricValue("国资处", 5, year))
         ));
 
-        // 固定资产 (国资处 metric 138, 万元)
+        // 固定资产 (国资处 metric 7, 万元)
         data.setFixedAssets(buildDualYear(
-                intOf(conditionMapper.getMetricValue("国资处", 138, year - 1)),
-                intOf(conditionMapper.getMetricValue("国资处", 138, year))
+                intOf(conditionMapper.getMetricValue("国资处", 7, year - 1)),
+                intOf(conditionMapper.getMetricValue("国资处", 7, year))
         ));
 
         // 资产概况
         ConditionData.AssetOverview overview = new ConditionData.AssetOverview();
         overview.setEquipmentValue(
-                conditionMapper.getMetricValue("国资处", 140, year) / 100.0);
+                (double) intOf(conditionMapper.getMetricValue("国资处", 9, year)));
         overview.setBookTotal(
-                conditionMapper.getMetricValue("图书馆", 49, year) / 1.0);
+                (double) intOf(conditionMapper.getMetricValue("图书馆", 130, year)));
         overview.setTeachingResearchArea(
-                conditionMapper.getMetricValue("国资处", 135, year) / 1.0);
+                (double) intOf(conditionMapper.getMetricValue("国资处", 4, year)));
         overview.setDatabaseCount(
-                intOf(conditionMapper.getMetricValue("图书馆", 51, year)));
+                intOf(conditionMapper.getMetricValue("图书馆", 132, year)));
         data.setAssetOverview(overview);
 
         // 设备趋势
@@ -60,8 +60,8 @@ public class ConditionServiceImpl implements ConditionService {
     }
 
     public List<ConditionData.EquipmentTrendItem> getEquipmentTrend() {
-        List<Map<String, Object>> countRows = conditionMapper.getEquipmentTrend(139);
-        List<Map<String, Object>> valueRows = conditionMapper.getEquipmentTrend(140);
+        List<Map<String, Object>> countRows = conditionMapper.getEquipmentTrend(8);
+        List<Map<String, Object>> valueRows = conditionMapper.getEquipmentTrend(9);
 
         Map<Integer, Double> countMap = new HashMap<>();
         for (Map<String, Object> row : countRows) {

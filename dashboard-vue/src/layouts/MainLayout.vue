@@ -1,12 +1,10 @@
 <template>
-  <dv-full-screen-container>
-    <div class="main-layout">
-      <Header />
-      <div class="content">
-        <router-view />
-      </div>
+  <div class="main-layout">
+    <Header />
+    <div class="content">
+      <router-view />
     </div>
-  </dv-full-screen-container>
+  </div>
 </template>
 
 <script setup lang="ts">
