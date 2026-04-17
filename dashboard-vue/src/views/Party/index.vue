@@ -6,17 +6,17 @@
     @yearChange="handleYearChange"
   >
     <template #left-top>
-      <SectionPanel :title="`${selectedYear}年党员队伍规模`" border-type="box-10">
-        <BarChart :data="partyMembersChartData" height="100%" />
+      <SectionPanel :title="`${selectedYear}年学生规模（学历×性别）`" border-type="box-10">
+        <GroupedStudentChart :data="partyMembersChartData" height="100%" />
       </SectionPanel>
     </template>
 
     <template #left-bottom>
-      <SectionPanel :title="`${selectedYear}年学生政治面貌`" border-type="box-1">
+      <SectionPanel :title="`${selectedYear}年硕博政治面貌`" border-type="box-1">
         <DonutChart
           :data="politicalChartData"
-          :centerValue="currentYearData.partyMembers.total"
-          centerLabel="党员总数"
+          :centerValue="(currentYearData.graduatePolitical?.partyMember ?? 0) + (currentYearData.graduatePolitical?.youthLeague ?? 0)"
+          centerLabel="总人数"
           height="100%"
         />
       </SectionPanel>
@@ -42,7 +42,7 @@
         <div class="indicator-card">
           <div class="indicator-icon">🎓</div>
           <div class="indicator-value">{{ ideologicalTeams }}</div>
-          <div class="indicator-label">思政团队</div>
+          <div class="indicator-label">思政教学团队</div>
         </div>
       </div>
     </template>
@@ -88,7 +88,7 @@ import { computed, onMounted } from 'vue'
 import { usePartyStore } from '@/stores/party'
 import DashboardLayout from '@/components/layout/DashboardLayout.vue'
 import SectionPanel from '@/components/common/SectionPanel.vue'
-import BarChart from '@/components/charts/BarChart.vue'
+import GroupedStudentChart from '@/components/charts/GroupedStudentChart.vue'
 import DonutChart from '@/components/charts/DonutChart.vue'
 import PieChart from '@/components/charts/PieChart.vue'
 

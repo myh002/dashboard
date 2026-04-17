@@ -18,8 +18,8 @@ public class PartyServiceImpl implements PartyService {
 
     private static final List<Integer> ZUZHIBU_METRIC_IDS = Arrays.asList(68);
     private static final List<Integer> TONGZHANBU_METRIC_IDS = Arrays.asList(59, 60, 61, 62, 63, 64, 65, 66);
-    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(73, 74, 76, 77, 101, 102);
-    private static final List<Integer> YANJIUSHENGYUAN_METRIC_IDS = Arrays.asList(114, 115, 117, 118);
+    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(71, 72, 73, 74, 76, 77, 101, 102);
+    private static final List<Integer> YANJIUSHENGYUAN_METRIC_IDS = Arrays.asList(110, 111, 112, 113, 114, 115, 117, 118);
 
     @Override
     @Cacheable(value = "party", key = "'yearly'")
@@ -106,6 +106,20 @@ public class PartyServiceImpl implements PartyService {
         it.setNationalTeam(intOf(getMetricValue(jiaowuchuMetrics, 101)));
         it.setProvincialTeam(intOf(getMetricValue(jiaowuchuMetrics, 102)));
         data.setIdeologicalTeams(it);
+
+        YearlyPartyData.StudentScaleData students = new YearlyPartyData.StudentScaleData();
+        students.setUndergraduateMale(intOf(getMetricValue(jiaowuchuMetrics, 71)));
+        students.setUndergraduateFemale(intOf(getMetricValue(jiaowuchuMetrics, 72)));
+        students.setMasterMale(intOf(getMetricValue(yanjiushengyuanMetrics, 110)));
+        students.setMasterFemale(intOf(getMetricValue(yanjiushengyuanMetrics, 111)));
+        students.setPhdMale(intOf(getMetricValue(yanjiushengyuanMetrics, 112)));
+        students.setPhdFemale(intOf(getMetricValue(yanjiushengyuanMetrics, 113)));
+        data.setStudentScale(students);
+
+        YearlyPartyData.GraduatePoliticalData gp = new YearlyPartyData.GraduatePoliticalData();
+        gp.setPartyMember(intOf(getMetricValue(yanjiushengyuanMetrics, 114)));
+        gp.setYouthLeague(intOf(getMetricValue(yanjiushengyuanMetrics, 115)));
+        data.setGraduatePolitical(gp);
 
         return data;
     }

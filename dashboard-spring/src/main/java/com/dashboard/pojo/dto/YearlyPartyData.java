@@ -10,6 +10,8 @@ public class YearlyPartyData {
     private YouthLeagueData youthLeague;
     private SpecialGroupsData specialGroups;
     private IdeologicalTeamsData ideologicalTeams;
+    private StudentScaleData studentScale;
+    private GraduatePoliticalData graduatePolitical;
 
     @Data
     public static class PartyMembersData {
@@ -46,5 +48,21 @@ public class YearlyPartyData {
     public static class IdeologicalTeamsData {
         private Integer nationalTeam;
         private Integer provincialTeam;
+    }
+
+    @Data
+    public static class StudentScaleData {
+        private Integer undergraduateMale;
+        private Integer undergraduateFemale;
+        private Integer masterMale;
+        private Integer masterFemale;
+        private Integer phdMale;
+        private Integer phdFemale;
+    }
+
+    @Data
+    public static class GraduatePoliticalData {
+        private Integer partyMember;
+        private Integer youthLeague;
     }
 }

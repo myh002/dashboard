@@ -37,12 +37,12 @@
         <div class="indicator-card">
           <div class="indicator-icon">📊</div>
           <div class="indicator-value">{{ graduateRatio }}%</div>
-          <div class="indicator-label">硕博学历占比</div>
+          <div class="indicator-label">教师硕博学历占比</div>
         </div>
         <div class="indicator-card">
           <div class="indicator-icon">🏆</div>
           <div class="indicator-value">{{ highLevelTalents }}</div>
-          <div class="indicator-label">高层次人才</div>
+          <div class="indicator-label">省级教学成果奖</div>
         </div>
       </div>
     </template>
@@ -63,24 +63,22 @@
             <p>职称结构方面，正高级职称 <span class="highlight">{{ currentYearData.title.professor }}</span> 人、副高级职称 <span class="highlight">{{ currentYearData.title.associate }}</span> 人、中级职称 <span class="highlight">{{ currentYearData.title.lecturer }}</span> 人，职称结构合理分布。</p>
           </div>
           <div class="analysis-item">
-            <p>高层次人才方面，拥有国家教学名师 <span class="highlight">{{ currentYearData.talents.nationalMaster }}</span> 人、省级教学名师 <span class="highlight">{{ currentYearData.talents.provincialMaster }}</span> 人、黄大年教师团队 <span class="highlight">{{ currentYearData.talents.huangdanianTeam }}</span> 个，国家级教学团队 <span class="highlight">{{ currentYearData.talents.nationalTeam }}</span> 个、省部级教学团队 <span class="highlight">{{ currentYearData.talents.provincialTeam }}</span> 个，人才梯队建设成效显著。</p>
+            <p>教学成果方面，获得省级教学成果奖 <span class="highlight">{{ currentYearData.talents.provincialTeachingAward }}</span> 项，教学改革成效显著。</p>
           </div>
         </div>
       </div>
     </template>
 
     <template #right-top>
-      <SectionPanel :title="`${selectedYear}年学历结构占比`" border-type="box-10">
+      <SectionPanel :title="`${selectedYear}年教师学历结构占比`" border-type="box-10">
         <PieChart :data="educationChartData" height="100%" />
       </SectionPanel>
     </template>
 
     <template #right-bottom>
-      <SectionPanel :title="`${selectedYear}年教学团队构成`" border-type="box-1">
-        <DonutChart
-          :data="talentsChartData"
-          :centerValue="currentYearData.talents.provincialTeam"
-          centerLabel="省部级团队"
+      <SectionPanel :title="`${selectedYear}年专任教师年龄分布`" border-type="box-1">
+        <PieChart
+          :data="ageChartData"
           height="100%"
         />
       </SectionPanel>
@@ -111,6 +109,7 @@ const titleChartData = computed(() => hrStore.titleChartData)
 const staffChartData = computed(() => hrStore.staffChartData)
 const educationChartData = computed(() => hrStore.educationChartData)
 const talentsChartData = computed(() => hrStore.talentsChartData)
+const ageChartData = computed(() => hrStore.ageChartData)
 
 const graduateRatio = computed(() => {
   const { education } = currentYearData.value
@@ -120,7 +119,7 @@ const graduateRatio = computed(() => {
 
 const highLevelTalents = computed(() => {
   const { talents } = currentYearData.value
-  return talents.nationalMaster + talents.provincialMaster + talents.huangdanianTeam + talents.nationalTeam + talents.provincialTeam
+  return talents.provincialTeachingAward
 })
 
 const handleYearChange = (year: string) => {

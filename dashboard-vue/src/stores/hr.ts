@@ -22,7 +22,8 @@ export const useHrStore = defineStore('hr', {
           staff: { total: 0, fullTime: 0, management: 0, supporting: 0, external: 0 },
           education: { doctorate: 0, master: 0, bachelor: 0 },
           title: { professor: 0, associate: 0, lecturer: 0, assistant: 0 },
-          talents: { nationalMaster: 0, provincialMaster: 0, huangdanianTeam: 0, nationalTeam: 0, provincialTeam: 0 }
+          talents: { provincialTeachingAward: 0 },
+          ageDistribution: { under35: 0, age36to45: 0, age46to55: 0, over56: 0 }
         }
       }
       return found
@@ -60,9 +61,17 @@ export const useHrStore = defineStore('hr', {
       const data = state.yearlyData.find(d => d.year === state.selectedYear) || state.yearlyData[state.yearlyData.length - 1]
       if (!data) return []
       return [
-        { name: '国家教学团队', value: data.talents.nationalTeam ?? 0 },
-        { name: '省级教学团队', value: data.talents.provincialTeam ?? 0 },
-        { name: '黄大年团队', value: data.talents.huangdanianTeam ?? 0 }
+        { name: '省级教学成果奖', value: data.talents.provincialTeachingAward ?? 0 }
+      ]
+    },
+    ageChartData: (state) => {
+      const data = state.yearlyData.find(d => d.year === state.selectedYear) || state.yearlyData[state.yearlyData.length - 1]
+      if (!data) return []
+      return [
+        { name: '35岁及以下', value: data.ageDistribution.under35 ?? 0 },
+        { name: '36-45岁', value: data.ageDistribution.age36to45 ?? 0 },
+        { name: '46-55岁', value: data.ageDistribution.age46to55 ?? 0 },
+        { name: '56岁及以上', value: data.ageDistribution.over56 ?? 0 }
       ]
     }
   },

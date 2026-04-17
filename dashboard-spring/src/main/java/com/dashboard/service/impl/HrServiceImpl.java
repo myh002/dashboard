@@ -16,8 +16,8 @@ public class HrServiceImpl implements HrService {
 
     private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024};
 
-    private static final List<Integer> RENSHICHU_METRIC_IDS = Arrays.asList(42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54);
-    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(97, 98, 99, 100, 101, 102);
+    private static final List<Integer> RENSHICHU_METRIC_IDS = Arrays.asList(42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58);
+    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(103);
 
     @Override
     @Cacheable(value = "hr", key = "'yearly'")
@@ -89,12 +89,15 @@ public class HrServiceImpl implements HrService {
         data.setTitle(title);
 
         YearlyHrData.TalentsData talents = new YearlyHrData.TalentsData();
-        talents.setNationalMaster(intOf(getMetricValue(jiaowuchuMetrics, 97)));
-        talents.setProvincialMaster(intOf(getMetricValue(jiaowuchuMetrics, 98)));
-        talents.setHuangdanianTeam(intOf(getMetricValue(jiaowuchuMetrics, 99)));
-        talents.setNationalTeam(intOf(getMetricValue(jiaowuchuMetrics, 100)));
-        talents.setProvincialTeam(intOf(getMetricValue(jiaowuchuMetrics, 102)));
+        talents.setProvincialTeachingAward(intOf(getMetricValue(jiaowuchuMetrics, 103)));
         data.setTalents(talents);
+        
+        YearlyHrData.AgeDistribution age = new YearlyHrData.AgeDistribution();
+        age.setUnder35(intOf(getMetricValue(renshichuMetrics, 55)));
+        age.setAge36to45(intOf(getMetricValue(renshichuMetrics, 56)));
+        age.setAge46to55(intOf(getMetricValue(renshichuMetrics, 57)));
+        age.setOver56(intOf(getMetricValue(renshichuMetrics, 58)));
+        data.setAgeDistribution(age);
 
         return data;
     }

@@ -1,6 +1,7 @@
 import request from './request'
 import type {
   FacultyData,
+  FacultyTitleTrendData,
   ResearchData,
   DisciplineData,
   TalentData,
@@ -16,6 +17,7 @@ import type {
 
 export const facultyApi = {
   getData: () => request.get<FacultyData>('/faculty'),
+  getTitleTrend: () => request.get<FacultyTitleTrendData>('/faculty/title-trend'),
 }
 
 export const researchApi = {

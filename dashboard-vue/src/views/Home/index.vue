@@ -29,7 +29,11 @@
           <div class="dual-panel">
             <div class="dual-left">
               <div class="chart-title">专任教师职级</div>
-              <RoseChart :data="facultyTitleChartData" height="100%" />
+              <StackedAreaChart
+                :xData="facultyTitleTrendChartData.xData"
+                :series="facultyTitleTrendChartData.series"
+                height="100%"
+              />
             </div>
             <div class="dual-right">
               <div class="chart-title">国家高层次人才</div>
@@ -306,7 +310,7 @@ import { formatNumber } from '@/utils/format'
 import Navigation from '@/layouts/Navigation.vue'
 import DataCard from '@/components/common/DataCard.vue'
 import DonutChart from '@/components/charts/DonutChart.vue'
-import RoseChart from '@/components/charts/RoseChart.vue'
+import StackedAreaChart from '@/components/charts/StackedAreaChart.vue'
 import LineChart from '@/components/charts/LineChart.vue'
 import LineChartClean from '@/components/charts/LineChartClean.vue'
 import BarChart from '@/components/charts/BarChart.vue'
@@ -323,7 +327,7 @@ const research = computed(() => dataStore.research)
 const discipline = computed(() => dataStore.discipline)
 const talent = computed(() => dataStore.talent)
 const condition = computed(() => dataStore.condition)
-const facultyTitleChartData = computed(() => dataStore.facultyTitleChartData)
+const facultyTitleTrendChartData = computed(() => dataStore.facultyTitleTrendChartData)
 const studentLevelChartData = computed(() => dataStore.studentLevelChartData)
 
 const talentIconMap: Record<string, Component> = {

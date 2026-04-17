@@ -9,6 +9,7 @@ public class YearlyHrData {
     private EducationData education;
     private TitleData title;
     private TalentsData talents;
+    private AgeDistribution ageDistribution;
 
     @Data
     public static class StaffData {
@@ -36,10 +37,14 @@ public class YearlyHrData {
 
     @Data
     public static class TalentsData {
-        private Integer nationalMaster;
-        private Integer provincialMaster;
-        private Integer huangdanianTeam;
-        private Integer nationalTeam;
-        private Integer provincialTeam;
+        private Integer provincialTeachingAward;
+    }
+    
+    @Data
+    public static class AgeDistribution {
+        private Integer under35;
+        private Integer age36to45;
+        private Integer age46to55;
+        private Integer over56;
     }
 }

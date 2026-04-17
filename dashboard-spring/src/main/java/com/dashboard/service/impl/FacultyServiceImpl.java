@@ -2,6 +2,7 @@ package com.dashboard.service.impl;
 
 import com.dashboard.mapper.FacultyMapper;
 import com.dashboard.pojo.dto.FacultyData;
+import com.dashboard.pojo.dto.FacultyTitleTrendData;
 import com.dashboard.service.FacultyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,28 @@ public class FacultyServiceImpl implements FacultyService {
 
         data.setTopTalents(topTalents);
         return data;
+    }
+    
+    @Override
+    public FacultyTitleTrendData getFacultyTitleTrend() {
+        FacultyTitleTrendData result = new FacultyTitleTrendData();
+        List<FacultyTitleTrendData.TitleDistribution> yearlyData = new ArrayList<>();
+        
+        int[] years = {2020, 2021, 2022, 2023, 2024};
+        
+        for (int year : years) {
+            FacultyTitleTrendData.TitleDistribution dist = new FacultyTitleTrendData.TitleDistribution();
+            dist.setYear(year);
+            dist.setSeniorTitle(intOf(facultyMapper.getTitleCount(year, 50)));
+            dist.setSeniorHigh(intOf(facultyMapper.getTitleCount(year, 51)));
+            dist.setMiddle(intOf(facultyMapper.getTitleCount(year, 52)));
+            dist.setJunior(intOf(facultyMapper.getTitleCount(year, 53)));
+            dist.setSeniorTech(intOf(facultyMapper.getTitleCount(year, 54)));
+            yearlyData.add(dist);
+        }
+        
+        result.setYearlyData(yearlyData);
+        return result;
     }
 
     private int intOf(Long v) {

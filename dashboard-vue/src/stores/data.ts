@@ -30,7 +30,8 @@ export const useDataStore = defineStore('data', {
         junior: 0,
         middle: 0
       },
-      topTalents: []
+      topTalents: [],
+      titleTrend: []
     },
 
     // ===== 科研数据 =====
@@ -108,6 +109,19 @@ export const useDataStore = defineStore('data', {
         { name: '专业技术人员', value: d.seniorTech }
       ]
     },
+    facultyTitleTrendChartData: (state) => {
+      const trend = state.faculty.titleTrend
+      return {
+        xData: trend.map(item => String(item.year)),
+        series: [
+          { name: '正高级', data: trend.map(item => item.seniorTitle) },
+          { name: '副高级', data: trend.map(item => item.seniorHigh) },
+          { name: '中级', data: trend.map(item => item.middle) },
+          { name: '初级', data: trend.map(item => item.junior) },
+          { name: '外聘教师', data: trend.map(item => item.seniorTech) }
+        ]
+      }
+    },
     studentLevelChartData: (state) => {
       const s = state.talent.studentLevels
       return [
@@ -124,8 +138,14 @@ export const useDataStore = defineStore('data', {
      */
     async fetchFacultyData() {
       try {
-        const res = await facultyApi.getData()
-        this.faculty = res.data
+        const [dataRes, trendRes] = await Promise.all([
+          facultyApi.getData(),
+          facultyApi.getTitleTrend()
+        ])
+        this.faculty = {
+          ...dataRes.data,
+          titleTrend: trendRes.data.yearlyData || []
+        }
       } catch (error) {
         console.error('获取师资数据失败:', error)
       }

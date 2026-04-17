@@ -2,6 +2,7 @@ package com.dashboard.controller;
 
 import com.dashboard.common.ResultData;
 import com.dashboard.pojo.dto.FacultyData;
+import com.dashboard.pojo.dto.FacultyTitleTrendData;
 import com.dashboard.service.FacultyService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -23,5 +24,10 @@ public class FacultyController {
             @Min(value = 2000, message = "年份不能小于2000")
             @Max(value = 2100, message = "年份不能大于2100") Integer year) {
         return ResultData.success(facultyService.getFacultyData(year));
+    }
+    
+    @GetMapping("/title-trend")
+    public ResultData<FacultyTitleTrendData> getFacultyTitleTrend() {
+        return ResultData.success(facultyService.getFacultyTitleTrend());
     }
 }

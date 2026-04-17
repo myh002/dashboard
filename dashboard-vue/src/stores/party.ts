@@ -23,27 +23,31 @@ export const usePartyStore = defineStore('party', {
           democraticParties: { revolutionary: 0, league: 0, construction: 0, progress: 0, farmersWorkers: 0, zhiGong: 0, jiuSan: 0, taiwanLeague: 0 },
           youthLeague: { undergraduate: 0, graduate: 0 },
           specialGroups: { minority: 0, disabled: 0 },
-          ideologicalTeams: { nationalTeam: 0, provincialTeam: 0 }
+          ideologicalTeams: { nationalTeam: 0, provincialTeam: 0 },
+          studentScale: { undergraduateMale: 0, undergraduateFemale: 0, masterMale: 0, masterFemale: 0, phdMale: 0, phdFemale: 0 },
+          graduatePolitical: { partyMember: 0, youthLeague: 0 }
         }
       }
       return found
     },
     partyMembersChartData: (state) => {
       const data = state.yearlyData.find(d => d.year === state.selectedYear) || state.yearlyData[state.yearlyData.length - 1]
-      if (!data) return []
+      if (!data || !data.studentScale) return []
       return [
-        { name: '党员总数', value: data.partyMembers.total ?? 0 },
-        { name: '本科生党员', value: data.partyMembers.undergraduate ?? 0 },
-        { name: '研究生党员', value: data.partyMembers.graduate ?? 0 }
+        { name: '本科生（男）', value: data.studentScale.undergraduateMale ?? 0 },
+        { name: '本科生（女）', value: data.studentScale.undergraduateFemale ?? 0 },
+        { name: '硕士生（男）', value: data.studentScale.masterMale ?? 0 },
+        { name: '硕士生（女）', value: data.studentScale.masterFemale ?? 0 },
+        { name: '博士生（男）', value: data.studentScale.phdMale ?? 0 },
+        { name: '博士生（女）', value: data.studentScale.phdFemale ?? 0 }
       ]
     },
     politicalChartData: (state) => {
       const data = state.yearlyData.find(d => d.year === state.selectedYear) || state.yearlyData[state.yearlyData.length - 1]
-      if (!data) return []
+      if (!data || !data.graduatePolitical) return []
       return [
-        { name: '党员', value: data.partyMembers.total ?? 0 },
-        { name: '共青团员', value: (data.youthLeague.undergraduate ?? 0) + (data.youthLeague.graduate ?? 0) },
-        { name: '其他', value: 0 }
+        { name: '中共党员', value: data.graduatePolitical.partyMember ?? 0 },
+        { name: '共青团员', value: data.graduatePolitical.youthLeague ?? 0 }
       ]
     },
     democraticPartiesChartData: (state) => {

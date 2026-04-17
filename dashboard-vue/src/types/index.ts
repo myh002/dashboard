@@ -13,6 +13,16 @@ export interface TalentItem {
   unit: string
 }
 
+/** 师资职称趋势数据项 */
+export interface TitleTrendItem {
+  year: number
+  seniorTitle: number
+  seniorHigh: number
+  middle: number
+  junior: number
+  seniorTech: number
+}
+
 /** 师资队伍数据 */
 export interface FacultyData {
   totalStaff: number
@@ -26,6 +36,19 @@ export interface FacultyData {
     middle: number
   }
   topTalents: TalentItem[]
+  titleTrend: TitleTrendItem[]
+}
+
+/** 师资职称趋势数据 */
+export interface FacultyTitleTrendData {
+  yearlyData: Array<{
+    year: number
+    seniorTitle: number
+    seniorHigh: number
+    middle: number
+    junior: number
+    seniorTech: number
+  }>
 }
 
 /** 科研项目统计 */
@@ -320,13 +343,17 @@ export interface TitleData {
   assistant: number
 }
 
-/** 高层次人才数据 */
+/** 教学成果数据 */
 export interface TalentsData {
-  nationalMaster: number
-  provincialMaster: number
-  huangdanianTeam: number
-  nationalTeam: number
-  provincialTeam: number
+  provincialTeachingAward: number
+}
+
+/** 年龄分布数据 */
+export interface AgeDistribution {
+  under35: number
+  age36to45: number
+  age46to55: number
+  over56: number
 }
 
 /** 单年份人事人才数据 */
@@ -336,6 +363,7 @@ export interface YearlyHrData {
   education: EducationData
   title: TitleData
   talents: TalentsData
+  ageDistribution: AgeDistribution
 }
 
 /** 人事人才状态 */
@@ -431,6 +459,22 @@ export interface IdeologicalTeamsData {
   provincialTeam: number
 }
 
+/** 学生规模数据（学历层次×性别） */
+export interface StudentScaleData {
+  undergraduateMale: number
+  undergraduateFemale: number
+  masterMale: number
+  masterFemale: number
+  phdMale: number
+  phdFemale: number
+}
+
+/** 硕博政治面貌数据 */
+export interface GraduatePoliticalData {
+  partyMember: number
+  youthLeague: number
+}
+
 /** 单年份党建思政数据 */
 export interface YearlyPartyData {
   year: string
@@ -439,6 +483,8 @@ export interface YearlyPartyData {
   youthLeague: YouthLeagueData
   specialGroups: SpecialGroupsData
   ideologicalTeams: IdeologicalTeamsData
+  studentScale: StudentScaleData
+  graduatePolitical: GraduatePoliticalData
 }
 
 /** 党建思政状态 */
