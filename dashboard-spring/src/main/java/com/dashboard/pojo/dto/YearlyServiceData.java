@@ -15,6 +15,8 @@ public class YearlyServiceData {
         private Double horizontalFunding;
         private Integer inventionPatents;
         private Integer utilityPatents;
+        private Integer designPatents;
+        private Integer varieties;
         private Integer standards;
         private Integer software;
     }
@@ -24,9 +26,8 @@ public class YearlyServiceData {
         private Integer undergraduate;
         private Double undergraduateRate;
         private Integer master;
-        private Double masterRate;
         private Integer phd;
-        private Double phdRate;
+        private Double graduateRate;
     }
 
     @Data

@@ -39,7 +39,7 @@ const navigationStore = useNavigationStore()
 }
 
 .title {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
   color: var(--text-primary);
   font-family: var(--font-title);

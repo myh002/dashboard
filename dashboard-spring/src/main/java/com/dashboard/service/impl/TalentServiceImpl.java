@@ -2,6 +2,7 @@ package com.dashboard.service.impl;
 
 import com.dashboard.pojo.dto.TalentData;
 import com.dashboard.pojo.dto.YearlyTalentData;
+import com.dashboard.pojo.dto.StudentLevelTrendData;
 import com.dashboard.mapper.TalentMapper;
 import com.dashboard.service.TalentService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class TalentServiceImpl implements TalentService {
 
     private static final int[] YEARS = {2020, 2021, 2022, 2023, 2024};
 
-    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(67, 71, 72, 78, 81, 82, 83, 84, 87, 88, 97, 98, 103, 104, 105, 106, 107);
+    private static final List<Integer> JIAOWUCHU_METRIC_IDS = Arrays.asList(67, 71, 72, 78, 81, 82, 83, 84, 85, 86, 87, 88, 97, 98, 101, 102, 103, 104, 105, 106, 107);
     private static final List<Integer> YANJIUSHENGYUAN_METRIC_IDS = Arrays.asList(108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 124, 125, 126, 127, 128, 129);
     private static final List<Integer> GUOJIJIAOYU_METRIC_IDS = Arrays.asList(1, 2);
 
@@ -74,7 +75,7 @@ public class TalentServiceImpl implements TalentService {
     @Override
     @Cacheable(value = "talent", key = "'yearly'")
     public List<YearlyTalentData> getYearlyData() {
-        Map<String, Map<Integer, Map<Integer, Long>>> allMetrics = loadAllMetrics();
+        Map<String, Map<Integer, Map<Integer, Double>>> allMetrics = loadAllMetrics();
 
         List<YearlyTalentData> result = new ArrayList<>();
         for (int year : YEARS) {
@@ -83,21 +84,49 @@ public class TalentServiceImpl implements TalentService {
         return result;
     }
 
-    private Map<String, Map<Integer, Map<Integer, Long>>> loadAllMetrics() {
-        Map<String, Map<Integer, Map<Integer, Long>>> result = new HashMap<>();
+    @Override
+    @Cacheable(value = "talent", key = "'student-level-trend'")
+    public List<StudentLevelTrendData> getStudentLevelTrend() {
+        Map<String, Map<Integer, Map<Integer, Double>>> allMetrics = loadAllMetrics();
 
-        result.put("教务处", loadDeptMetrics("教务处", JIAOWUCHU_METRIC_IDS));
-        result.put("研究生院", loadDeptMetrics("研究生院", YANJIUSHENGYUAN_METRIC_IDS));
-        result.put("国际教育学院", loadDeptMetrics("国际教育学院", GUOJIJIAOYU_METRIC_IDS));
+        List<StudentLevelTrendData> result = new ArrayList<>();
+        for (int year : YEARS) {
+            Map<Integer, Double> jiaowuchuMetrics = allMetrics.get("教务处").get(year);
+            Map<Integer, Double> yanjiushengyuanMetrics = allMetrics.get("研究生院").get(year);
+
+            int underMale = intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 71));
+            int underFemale = intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 72));
+            int masterMale = intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 110));
+            int masterFemale = intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 111));
+            int phdMale = intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 112));
+            int phdFemale = intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 113));
+
+            StudentLevelTrendData trendData = new StudentLevelTrendData(
+                String.valueOf(year),
+                underMale + underFemale,
+                masterMale + masterFemale,
+                phdMale + phdFemale
+            );
+            result.add(trendData);
+        }
+        return result;
+    }
+
+    private Map<String, Map<Integer, Map<Integer, Double>>> loadAllMetrics() {
+        Map<String, Map<Integer, Map<Integer, Double>>> result = new HashMap<>();
+
+        result.put("教务处", loadDeptMetricsDouble("教务处", JIAOWUCHU_METRIC_IDS));
+        result.put("研究生院", loadDeptMetricsDouble("研究生院", YANJIUSHENGYUAN_METRIC_IDS));
+        result.put("国际教育学院", loadDeptMetricsDouble("国际教育学院", GUOJIJIAOYU_METRIC_IDS));
 
         return result;
     }
 
-    private Map<Integer, Map<Integer, Long>> loadDeptMetrics(String deptName, List<Integer> metricIds) {
+    private Map<Integer, Map<Integer, Double>> loadDeptMetricsDouble(String deptName, List<Integer> metricIds) {
         List<Integer> yearList = new ArrayList<>();
         for (int y : YEARS) yearList.add(y);
         List<Map<String, Object>> rows = talentMapper.getMetricsBatch(deptName, yearList, metricIds);
-        Map<Integer, Map<Integer, Long>> yearMap = new HashMap<>();
+        Map<Integer, Map<Integer, Double>> yearMap = new HashMap<>();
 
         for (int year : YEARS) {
             yearMap.put(year, new HashMap<>());
@@ -106,73 +135,83 @@ public class TalentServiceImpl implements TalentService {
         for (Map<String, Object> row : rows) {
             Integer year = ((Number) row.get("year")).intValue();
             Integer metricId = ((Number) row.get("metric_id")).intValue();
-            Long value = ((Number) row.get("value")).longValue();
+            Double value = ((Number) row.get("value")).doubleValue();
             yearMap.get(year).put(metricId, value);
         }
 
         return yearMap;
     }
 
-    private YearlyTalentData buildYearData(int year, Map<String, Map<Integer, Map<Integer, Long>>> allMetrics) {
+    private YearlyTalentData buildYearData(int year, Map<String, Map<Integer, Map<Integer, Double>>> allMetrics) {
         YearlyTalentData data = new YearlyTalentData();
         data.setYear(String.valueOf(year));
 
-        Map<Integer, Long> jiaowuchuMetrics = allMetrics.get("教务处").get(year);
-        Map<Integer, Long> yanjiushengyuanMetrics = allMetrics.get("研究生院").get(year);
-        Map<Integer, Long> guojijiaoyuMetrics = allMetrics.get("国际教育学院").get(year);
+        Map<Integer, Double> jiaowuchuMetrics = allMetrics.get("教务处").get(year);
+        Map<Integer, Double> yanjiushengyuanMetrics = allMetrics.get("研究生院").get(year);
+        Map<Integer, Double> guojijiaoyuMetrics = allMetrics.get("国际教育学院").get(year);
 
         YearlyTalentData.UndergraduateData under = new YearlyTalentData.UndergraduateData();
-        under.setMale(intOf(getMetricValue(jiaowuchuMetrics, 71)));
-        under.setFemale(intOf(getMetricValue(jiaowuchuMetrics, 72)));
+        under.setMale(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 71)));
+        under.setFemale(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 72)));
         under.setTotal(under.getMale() + under.getFemale());
-        under.setGraduates(intOf(getMetricValue(jiaowuchuMetrics, 83)));
-        under.setGraduateRate(getMetricValue(jiaowuchuMetrics, 84) / 1.0);
-        under.setEmployment(intOf(getMetricValue(jiaowuchuMetrics, 87)));
-        under.setEmploymentRate(getMetricValue(jiaowuchuMetrics, 88) / 1.0);
+        under.setGraduates(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 83)));
+        under.setGraduateRate(getMetricValueDouble(jiaowuchuMetrics, 84));
+        under.setGrantRate(getMetricValueDouble(jiaowuchuMetrics, 86));
+        under.setDegreeGranted(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 85)));
+        under.setEmployment(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 87)));
+        under.setEmploymentRate(getMetricValueDouble(jiaowuchuMetrics, 88));
         data.setUndergraduate(under);
 
         YearlyTalentData.MasterData master = new YearlyTalentData.MasterData();
-        master.setMale(intOf(getMetricValue(yanjiushengyuanMetrics, 110)));
-        master.setFemale(intOf(getMetricValue(yanjiushengyuanMetrics, 111)));
+        master.setMale(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 110)));
+        master.setFemale(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 111)));
         master.setTotal(master.getMale() + master.getFemale());
-        master.setSupervisors(intOf(getMetricValue(yanjiushengyuanMetrics, 108)));
-        master.setGraduates(intOf(getMetricValue(yanjiushengyuanMetrics, 124)));
-        master.setGraduateRate(getMetricValue(yanjiushengyuanMetrics, 125) / 1.0);
-        master.setEmployment(intOf(getMetricValue(yanjiushengyuanMetrics, 128)));
-        master.setEmploymentRate(getMetricValue(yanjiushengyuanMetrics, 129) / 1.0);
+        master.setSupervisors(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 108)));
+        master.setGraduates(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 124)));
+        master.setGraduateRate(getMetricValueDouble(yanjiushengyuanMetrics, 125));
+        master.setGrantRate(getMetricValueDouble(yanjiushengyuanMetrics, 127));
+        master.setDegreeGranted(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 126)));
+        master.setEmployment(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 128)));
+        master.setEmploymentRate(getMetricValueDouble(yanjiushengyuanMetrics, 129));
         data.setMaster(master);
 
         YearlyTalentData.PhdData phd = new YearlyTalentData.PhdData();
-        phd.setMale(intOf(getMetricValue(yanjiushengyuanMetrics, 112)));
-        phd.setFemale(intOf(getMetricValue(yanjiushengyuanMetrics, 113)));
+        phd.setMale(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 112)));
+        phd.setFemale(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 113)));
         phd.setTotal(phd.getMale() + phd.getFemale());
-        phd.setSupervisors(intOf(getMetricValue(yanjiushengyuanMetrics, 109)));
-        phd.setGraduates(intOf(getMetricValue(yanjiushengyuanMetrics, 124)));
-        phd.setGraduateRate(getMetricValue(yanjiushengyuanMetrics, 125) / 1.0);
-        phd.setEmployment(intOf(getMetricValue(yanjiushengyuanMetrics, 128)));
-        phd.setEmploymentRate(getMetricValue(yanjiushengyuanMetrics, 129) / 1.0);
+        phd.setSupervisors(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 109)));
+        phd.setGraduates(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 124)));
+        phd.setGraduateRate(getMetricValueDouble(yanjiushengyuanMetrics, 125));
+        phd.setEmployment(intOfDouble(getMetricValueDouble(yanjiushengyuanMetrics, 128)));
+        phd.setEmploymentRate(getMetricValueDouble(yanjiushengyuanMetrics, 129));
         data.setPhd(phd);
 
         YearlyTalentData.TeachingData teaching = new YearlyTalentData.TeachingData();
-        teaching.setCourses(intOf(getMetricValue(jiaowuchuMetrics, 81)));
-        teaching.setProfessorCourses(intOf(getMetricValue(jiaowuchuMetrics, 82)));
-        teaching.setNationalReform(intOf(getMetricValue(jiaowuchuMetrics, 104)));
-        teaching.setProvincialReform(intOf(getMetricValue(jiaowuchuMetrics, 105)));
-        teaching.setSchoolReform(intOf(getMetricValue(jiaowuchuMetrics, 106)));
-        teaching.setTeachingAward(intOf(getMetricValue(jiaowuchuMetrics, 103)));
-        teaching.setPracticeBases(intOf(getMetricValue(jiaowuchuMetrics, 107)));
+        teaching.setCourses(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 81)));
+        teaching.setProfessorCourses(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 82)));
+        teaching.setNationalReform(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 104)));
+        teaching.setProvincialReform(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 105)));
+        teaching.setSchoolReform(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 106)));
+        teaching.setTeachingAward(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 103)));
+        teaching.setPracticeBases(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 107)));
+        teaching.setNationalTeams(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 101)));
+        teaching.setProvincialTeams(intOfDouble(getMetricValueDouble(jiaowuchuMetrics, 102)));
         data.setTeaching(teaching);
 
         YearlyTalentData.InternationalData intl = new YearlyTalentData.InternationalData();
-        intl.setCooperativePrograms(intOf(getMetricValue(guojijiaoyuMetrics, 1)));
-        intl.setInternationalStudents(intOf(getMetricValue(guojijiaoyuMetrics, 2)));
+        intl.setCooperativePrograms(intOfDouble(getMetricValueDouble(guojijiaoyuMetrics, 1)));
+        intl.setInternationalStudents(intOfDouble(getMetricValueDouble(guojijiaoyuMetrics, 2)));
         data.setInternational(intl);
 
         return data;
     }
 
-    private Long getMetricValue(Map<Integer, Long> metricMap, int metricId) {
-        return metricMap.getOrDefault(metricId, 0L);
+    private Double getMetricValueDouble(Map<Integer, Double> metricMap, int metricId) {
+        return metricMap.getOrDefault(metricId, 0.0);
+    }
+
+    private int intOfDouble(Double v) {
+        return v != null ? v.intValue() : 0;
     }
 
     private int intOf(Long v) {

@@ -6,19 +6,40 @@
     @yearChange="handleYearChange"
   >
     <template #left-top>
-      <SectionPanel :title="`${selectedYear}年学科层次分布`" border-type="box-10">
-        <BarChart :data="disciplineChartData" height="100%" />
+      <SectionPanel
+        :title="disciplineTitle"
+        border-type="box-10"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="disciplineTrendMode"
+        @title-click="toggleDisciplineTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <BarChart v-if="!disciplineTrendMode" :data="disciplineChartData" height="100%" />
+          <TrendChart v-else :x-data="disciplineTrendData.years" :series="disciplineTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
     <template #left-bottom>
-      <SectionPanel :title="`${selectedYear}年本科生构成`" border-type="box-1">
-        <DonutChart
-          :data="majorChartData"
-          :centerValue="(currentYearData.majors?.undergraduateMale || 0) + (currentYearData.majors?.undergraduateFemale || 0)"
-          centerLabel="本科生总数"
-          height="100%"
-        />
+      <SectionPanel
+        :title="majorTitle"
+        border-type="box-1"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="majorTrendMode"
+        @title-click="toggleMajorTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <DonutChart
+            v-if="!majorTrendMode"
+            :data="majorChartData"
+            :centerValue="(currentYearData.majors?.undergraduateMale || 0) + (currentYearData.majors?.undergraduateFemale || 0)"
+            centerLabel="本科生总数"
+            height="100%"
+          />
+          <TrendChart v-else :x-data="majorTrendData.years" :series="majorTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
@@ -57,7 +78,7 @@
             <p>学科建设方面，拥有省级特色重点学科 <span class="highlight">{{ currentYearData.disciplines?.provincialKey || 0 }}</span> 个、省级重点学科 <span class="highlight">{{ currentYearData.disciplines?.provincialEmphasis || 0 }}</span> 个，一流建设学科 <span class="highlight">{{ currentYearData.disciplines?.firstClassConstruction || 0 }}</span> 个、一流学科 <span class="highlight">{{ currentYearData.disciplines?.firstClass || 0 }}</span> 个，学科竞争力持续提升。</p>
           </div>
           <div class="analysis-item">
-            <p>学位点布局方面，博士后流动站 <span class="highlight">{{ currentYearData.degreePoints?.postdoctoral || 0 }}</span> 个、一级博点 <span class="highlight">{{ currentYearData.degreePoints?.doctoralFirst || 0 }}</span> 个、一级硕点 <span class="highlight">{{ currentYearData.degreePoints?.masterFirst || 0 }}</span> 个、二级硕点 <span class="highlight">{{ currentYearData.degreePoints?.masterSecond || 0 }}</span> 个、专业硕点 <span class="highlight">{{ currentYearData.degreePoints?.professional || 0 }}</span> 个，学位层次结构完善。</p>
+            <p>学位点布局方面，博士后流动站 <span class="highlight">{{ currentYearData.degreePoints?.postdoctoral || 0 }}</span> 个、一级博点 <span class="highlight">{{ currentYearData.degreePoints?.doctoralFirst || 0 }}</span> 个、一级硕点 <span class="highlight">{{ currentYearData.degreePoints?.masterFirst || 0 }}</span> 个、二级硕点 <span class="highlight">{{ currentYearData.degreePoints?.masterSecond || 0 }}</span> 个，专业硕点 <span class="highlight">{{ currentYearData.degreePoints?.professional || 0 }}</span> 个，学位层次结构完善。</p>
           </div>
           <div class="analysis-item">
             <p>学生构成方面，本科男生 <span class="highlight">{{ currentYearData.majors?.undergraduateMale || 0 }}</span> 人、本科女生 <span class="highlight">{{ currentYearData.majors?.undergraduateFemale || 0 }}</span> 人，形成良好的学科专业协同发展格局。</p>
@@ -70,27 +91,48 @@
     </template>
 
     <template #right-top>
-      <SectionPanel :title="`${selectedYear}年职称分布`" border-type="box-10">
-        <BarChart :data="titleDistributionChartData" height="100%" />
+      <SectionPanel
+        :title="titleTitle"
+        border-type="box-10"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="titleTrendMode"
+        @title-click="toggleTitleTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <BarChart v-if="!titleTrendMode" :data="titleDistributionChartData" height="100%" />
+          <TrendChart v-else :x-data="titleTrendData.years" :series="titleTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
     <template #right-bottom>
-      <SectionPanel :title="`${selectedYear}年教学成果分布`" border-type="box-1">
-        <PieChart :data="teachingAchievementsChartData" height="100%" />
+      <SectionPanel
+        :title="teachingTitle"
+        border-type="box-1"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="teachingTrendMode"
+        @title-click="toggleTeachingTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <PieChart v-if="!teachingTrendMode" :data="teachingAchievementsChartData" height="100%" />
+          <TrendChart v-else :x-data="teachingTrendData.years" :series="teachingTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
   </DashboardLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useDisciplineStore } from '@/stores/discipline'
 import DashboardLayout from '@/components/layout/DashboardLayout.vue'
 import SectionPanel from '@/components/common/SectionPanel.vue'
 import BarChart from '@/components/charts/BarChart.vue'
 import DonutChart from '@/components/charts/DonutChart.vue'
 import PieChart from '@/components/charts/PieChart.vue'
+import TrendChart from '@/components/charts/TrendChart.vue'
 
 const disciplineStore = useDisciplineStore()
 
@@ -106,6 +148,42 @@ const disciplineChartData = computed(() => disciplineStore.disciplineChartData)
 const majorChartData = computed(() => disciplineStore.majorChartData)
 const titleDistributionChartData = computed(() => disciplineStore.titleDistributionChartData)
 const teachingAchievementsChartData = computed(() => disciplineStore.teachingAchievementsChartData)
+
+const disciplineTrendData = computed(() => disciplineStore.disciplineTrendData)
+const majorTrendData = computed(() => disciplineStore.majorTrendData)
+const titleTrendData = computed(() => disciplineStore.titleTrendData)
+const teachingTrendData = computed(() => disciplineStore.teachingTrendData)
+
+const disciplineTrendMode = ref(false)
+const majorTrendMode = ref(false)
+const titleTrendMode = ref(false)
+const teachingTrendMode = ref(false)
+
+const disciplineTitle = computed(() =>
+  disciplineTrendMode.value ? '学科层次趋势' : `${selectedYear.value}年学科层次分布`
+)
+const majorTitle = computed(() =>
+  majorTrendMode.value ? '本科生构成趋势' : `${selectedYear.value}年本科生构成`
+)
+const titleTitle = computed(() =>
+  titleTrendMode.value ? '职称分布趋势' : `${selectedYear.value}年职称分布`
+)
+const teachingTitle = computed(() =>
+  teachingTrendMode.value ? '教学成果趋势' : `${selectedYear.value}年教学成果分布`
+)
+
+const toggleDisciplineTrend = () => {
+  disciplineTrendMode.value = !disciplineTrendMode.value
+}
+const toggleMajorTrend = () => {
+  majorTrendMode.value = !majorTrendMode.value
+}
+const toggleTitleTrend = () => {
+  titleTrendMode.value = !titleTrendMode.value
+}
+const toggleTeachingTrend = () => {
+  teachingTrendMode.value = !teachingTrendMode.value
+}
 
 const doctoralAndMasterTotal = computed(() => {
   const dp = currentYearData.value.degreePoints
@@ -198,7 +276,7 @@ const handleYearChange = (year: string) => {
   justify-content: center;
   align-items: center;
   gap: 16px;
-  padding: 16px;
+  padding: 16px 16px 16px 0px;
   background: rgba(12, 30, 60, 0.4);
   border-radius: var(--radius-sm);
   overflow-y: auto;
@@ -225,5 +303,15 @@ const handleYearChange = (year: string) => {
       text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
     }
   }
+}
+
+.chart-fade-enter-active,
+.chart-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.chart-fade-enter-from,
+.chart-fade-leave-to {
+  opacity: 0;
 }
 </style>

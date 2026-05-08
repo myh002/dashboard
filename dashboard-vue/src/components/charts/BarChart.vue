@@ -32,7 +32,8 @@ const chartOption = computed(() => {
       type: 'category' as const,
       data: props.data.map(d => d.name),
       axisLabel: {
-        inside: false,
+        interval: 0,
+        rotate: 30,
         color: '#a0aec0',
         fontSize: 11
       },

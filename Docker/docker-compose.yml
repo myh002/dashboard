@@ -1,13 +1,12 @@
 services:
   frontend:
     build:
-      context: ../dashboard-vue
+      context: ./vue
       dockerfile: Dockerfile
     container_name: dashboard-vue
     ports:
       - "80:80"
     volumes:
-      - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
     environment:
@@ -15,8 +14,7 @@ services:
     networks:
       - dashboard-network
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
       interval: 30s
@@ -34,19 +32,16 @@ services:
 
   backend:
     build:
-      context: ../dashboard-spring
+      context: ./java
       dockerfile: Dockerfile
     container_name: dashboard-spring
     ports:
       - "${SERVER_PORT:-8080}:${SERVER_PORT:-8080}"
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
     restart: unless-stopped
     env_file:
       - .env
     environment:
       - TZ=Asia/Shanghai
-      - SERVER_PORT=${SERVER_PORT:-8080}
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
       - SPRING_DATASOURCE_USERNAME=${MYSQL_DATABASE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_DATABASE_PASSWORD}
@@ -55,12 +50,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${SERVER_PORT:-8080}/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
     deploy:
       resources:
         limits:
@@ -74,8 +63,11 @@ services:
     image: mysql:8.3.0
     container_name: mysql-server
     restart: always
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_HOST: '%'
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       TZ: Asia/Shanghai
     volumes:

@@ -71,6 +71,56 @@ export const usePartyStore = defineStore('party', {
         { name: '少数民族', value: data.specialGroups.minority ?? 0 },
         { name: '残疾人', value: data.specialGroups.disabled ?? 0 }
       ]
+    },
+    studentScaleTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          { name: '本科生（男）', data: state.yearlyData.map(d => d.studentScale?.undergraduateMale ?? 0) },
+          { name: '本科生（女）', data: state.yearlyData.map(d => d.studentScale?.undergraduateFemale ?? 0) },
+          { name: '硕士生（男）', data: state.yearlyData.map(d => d.studentScale?.masterMale ?? 0) },
+          { name: '硕士生（女）', data: state.yearlyData.map(d => d.studentScale?.masterFemale ?? 0) },
+          { name: '博士生（男）', data: state.yearlyData.map(d => d.studentScale?.phdMale ?? 0) },
+          { name: '博士生（女）', data: state.yearlyData.map(d => d.studentScale?.phdFemale ?? 0) }
+        ]
+      }
+    },
+    politicalTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          { name: '中共党员', data: state.yearlyData.map(d => d.graduatePolitical?.partyMember ?? 0) },
+          { name: '共青团员', data: state.yearlyData.map(d => d.graduatePolitical?.youthLeague ?? 0) }
+        ]
+      }
+    },
+    democraticTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          { name: '民革', data: state.yearlyData.map(d => d.democraticParties?.revolutionary ?? 0) },
+          { name: '民盟', data: state.yearlyData.map(d => d.democraticParties?.league ?? 0) },
+          { name: '民建', data: state.yearlyData.map(d => d.democraticParties?.construction ?? 0) },
+          { name: '民进', data: state.yearlyData.map(d => d.democraticParties?.progress ?? 0) },
+          { name: '农工党', data: state.yearlyData.map(d => d.democraticParties?.farmersWorkers ?? 0) },
+          { name: '致公党', data: state.yearlyData.map(d => d.democraticParties?.zhiGong ?? 0) },
+          { name: '九三学社', data: state.yearlyData.map(d => d.democraticParties?.jiuSan ?? 0) },
+          { name: '台盟', data: state.yearlyData.map(d => d.democraticParties?.taiwanLeague ?? 0) }
+        ]
+      }
+    },
+    specialGroupsTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          { name: '少数民族', data: state.yearlyData.map(d => d.specialGroups?.minority ?? 0) },
+          { name: '残疾人', data: state.yearlyData.map(d => d.specialGroups?.disabled ?? 0) }
+        ]
+      }
     }
   },
 

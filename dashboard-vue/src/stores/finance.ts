@@ -80,6 +80,86 @@ export const useFinanceStore = defineStore('finance', {
         { name: '电子图书(种)', value: data.library.ebookCount ?? 0 },
         { name: '电子期刊(种)', value: data.library.ejournalCount ?? 0 }
       ]
+    },
+    libraryTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '图书数量（册）',
+            data: state.yearlyData.map(d => d.library.bookCount ?? 0)
+          },
+          {
+            name: '电子图书(种)',
+            data: state.yearlyData.map(d => d.library.ebookCount ?? 0)
+          },
+          {
+            name: '电子期刊(种)',
+            data: state.yearlyData.map(d => d.library.ejournalCount ?? 0)
+          }
+        ]
+      }
+    },
+    campusTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '教学行政用房(万m²)',
+            data: state.yearlyData.map(d => d.campus.teachingArea ?? 0)
+          },
+          {
+            name: '实验室用房(万m²)',
+            data: state.yearlyData.map(d => d.campus.labArea ?? 0)
+          },
+          {
+            name: '学生宿舍(万m²)',
+            data: state.yearlyData.map(d => d.campus.dormitoryArea ?? 0)
+          }
+        ]
+      }
+    },
+    fundingTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '纵向经费(万)',
+            data: state.yearlyData.map(d => d.research.verticalFunding ?? 0)
+          },
+          {
+            name: '横向经费(万)',
+            data: state.yearlyData.map(d => d.campus.horizontalFunding ?? 0)
+          }
+        ]
+      }
+    },
+    equipmentTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '教学科研设备数(台)',
+            data: state.yearlyData.map(d => d.assets.equipmentCount ?? 0)
+          },
+          {
+            name: '教学科研设备原值(万)',
+            data: state.yearlyData.map(d => d.assets.equipmentValue ?? 0)
+          },
+          {
+            name: '50万以上设备数(台)',
+            data: state.yearlyData.map(d => d.assets.largeEquipmentCount ?? 0)
+          },
+          {
+            name: '50万以上设备原值(万)',
+            data: state.yearlyData.map(d => d.assets.largeEquipmentValue ?? 0)
+          }
+        ]
+      }
     }
   },
 

@@ -63,6 +63,102 @@ export const useResearchStore = defineStore('research', {
         { name: '标准发布', value: data.publications.standards ?? 0 },
         { name: '软件著作权', value: data.publications.software ?? 0 }
       ]
+    },
+    projectTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '国家级',
+            data: state.yearlyData.map(d => d.projects.national ?? 0)
+          },
+          {
+            name: '部级',
+            data: state.yearlyData.map(d => d.projects.ministerial ?? 0)
+          },
+          {
+            name: '省级',
+            data: state.yearlyData.map(d => d.projects.provincial ?? 0)
+          },
+          {
+            name: '厅局级',
+            data: state.yearlyData.map(d => d.projects.prefectural ?? 0)
+          },
+          {
+            name: '校级',
+            data: state.yearlyData.map(d => d.projects.school ?? 0)
+          }
+        ]
+      }
+    },
+    fundingTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '纵向经费(万)',
+            data: state.yearlyData.map(d => d.funding.vertical ?? 0)
+          },
+          {
+            name: '横向经费(万)',
+            data: state.yearlyData.map(d => d.funding.horizontal ?? 0)
+          }
+        ]
+      }
+    },
+    paperTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: 'SCI一区',
+            data: state.yearlyData.map(d => d.papers.sciQ1 ?? 0)
+          },
+          {
+            name: 'SCI二区',
+            data: state.yearlyData.map(d => d.papers.sciQ2 ?? 0)
+          },
+          {
+            name: 'SCI三区',
+            data: state.yearlyData.map(d => d.papers.sciQ3 ?? 0)
+          },
+          {
+            name: 'SCI四区',
+            data: state.yearlyData.map(d => d.papers.sciQ4 ?? 0)
+          },
+          {
+            name: 'EI',
+            data: state.yearlyData.map(d => d.papers.ei ?? 0)
+          }
+        ]
+      }
+    },
+    patentTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '发明专利',
+            data: state.yearlyData.map(d => d.publications.patents.invention ?? 0)
+          },
+          {
+            name: '实用新型',
+            data: state.yearlyData.map(d => d.publications.patents.utility ?? 0)
+          },
+          {
+            name: '外观设计',
+            data: state.yearlyData.map(d => d.publications.patents.design ?? 0)
+          },
+          {
+            name: '软件著作权',
+            data: state.yearlyData.map(d => d.publications.software ?? 0)
+          }
+        ]
+      }
     }
   },
 

@@ -6,19 +6,39 @@
     @yearChange="handleYearChange"
   >
     <template #left-top>
-      <SectionPanel :title="`${selectedYear}年技术服务产出`" border-type="box-10">
-        <BarChart :data="techOutputChartData" height="100%" />
+      <SectionPanel
+        :title="cooperationTitle"
+        border-type="box-10"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="cooperationTrendMode"
+        @title-click="toggleCooperationTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <BarChart v-if="!cooperationTrendMode" :data="cooperationChartData" height="100%" />
+          <TrendChart v-else :x-data="cooperationTrendData.years" :series="cooperationTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
     <template #left-bottom>
-      <SectionPanel :title="`${selectedYear}年产学研合作`" border-type="box-1">
-        <DonutChart
-          :data="cooperationChartData"
-          :centerValue="currentYearData.cooperation.horizontalFunding"
-          centerLabel="横向经费(万)"
-          height="100%"
-        />
+      <SectionPanel
+        :title="techOutputTitle"
+        border-type="box-1"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="techOutputTrendMode"
+        @title-click="toggleTechOutputTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <DonutChart
+            v-if="!techOutputTrendMode"
+            :data="techOutputChartData"
+            centerLabel="技术服务"
+            height="100%"
+          />
+          <TrendChart v-else :x-data="techOutputTrendData.years" :series="techOutputTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
@@ -31,7 +51,7 @@
         </div>
         <div class="indicator-card">
           <div class="indicator-icon">📈</div>
-          <div class="indicator-value">{{ graduateEmploymentRate }}%</div>
+          <div class="indicator-value">{{ (currentYearData.employment.graduateRate * 100).toFixed(1) }}%</div>
           <div class="indicator-label">硕博就业率</div>
         </div>
         <div class="indicator-card">
@@ -54,48 +74,70 @@
         </div>
         <div class="analysis-section">
           <div class="analysis-item">
-            <p>产学研合作方面，横向项目经费达 <span class="highlight">{{ currentYearData.cooperation.horizontalFunding }}</span> 万元，发明专利 <span class="highlight">{{ currentYearData.cooperation.inventionPatents }}</span> 项、实用新型专利 <span class="highlight">{{ currentYearData.cooperation.utilityPatents }}</span> 项，科技成果转化活跃。</p>
+            <p>产学研合作方面，横向项目经费达 <span class="highlight">{{ currentYearData.cooperation.horizontalFunding }}</span> 万元，发明专利 <span class="highlight">{{ currentYearData.cooperation.inventionPatents }}</span> 项、实用新型专利 <span class="highlight">{{ currentYearData.cooperation.utilityPatents }}</span> 项，外观设计专利 <span class="highlight">{{ currentYearData.cooperation.designPatents }}</span> 项、动植物新品种 <span class="highlight">{{ currentYearData.cooperation.varieties }}</span> 项，科技成果转化活跃。</p>
           </div>
           <div class="analysis-item">
-            <p>技术服务方面，发布行业标准 <span class="highlight">{{ currentYearData.cooperation.standards }}</span> 项，获批软件著作权 <span class="highlight">{{ currentYearData.cooperation.software }}</span> 项，技术成果输出能力持续增强。</p>
+            <p>技术服务方面，标准发布 <span class="highlight">{{ currentYearData.cooperation.standards }}</span> 项、软件著作权 <span class="highlight">{{ currentYearData.cooperation.software }}</span> 项，技术成果输出能力持续增强。</p>
           </div>
           <div class="analysis-item">
-            <p>人才服务社会方面，本科就业率 <span class="highlight">{{ currentYearData.employment.undergraduateRate }}%</span>、硕士就业率 <span class="highlight">{{ currentYearData.employment.masterRate }}%</span>、博士就业率 <span class="highlight">{{ currentYearData.employment.phdRate }}%</span>，人才培养质量稳步提升。</p>
+            <p>人才服务社会方面，本科生毕业 <span class="highlight">{{ currentYearData.employment.undergraduate }}</span> 人、研究生毕业 <span class="highlight">{{ currentYearData.employment.master }}</span> 人，人才培养质量稳步提升。</p>
           </div>
           <div class="analysis-item">
-            <p>国际交流服务方面，留学生 <span class="highlight">{{ currentYearData.international.internationalStudents }}</span> 人、中外合作办学招生 <span class="highlight">{{ currentYearData.international.cooperativePrograms }}</span> 人、校外实践基地 <span class="highlight">{{ currentYearData.international.practiceBases }}</span> 个，国际化办学成效显著。</p>
+            <p>国际交流服务方面，留学生 <span class="highlight">{{ currentYearData.international.internationalStudents }}</span> 人、中外合作办学招生 <span class="highlight">{{ currentYearData.international.cooperativePrograms }}</span> 人，国际化办学成效显著。</p>
           </div>
         </div>
       </div>
     </template>
 
     <template #right-top>
-      <SectionPanel :title="`${selectedYear}年国际交流服务`" border-type="box-10">
-        <PieChart :data="internationalChartData" height="100%" />
+      <SectionPanel
+        :title="internationalTitle"
+        border-type="box-10"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="internationalTrendMode"
+        @title-click="toggleInternationalTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <PieChart v-if="!internationalTrendMode" :data="internationalChartData" height="100%" />
+          <TrendChart v-else :x-data="internationalTrendData.years" :series="internationalTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
     <template #right-bottom>
-      <SectionPanel :title="`${selectedYear}年人才服务输出`" border-type="box-1">
-        <DonutChart
-          :data="employmentChartData"
-          :centerValue="totalEmployment"
-          centerLabel="就业总数"
-          height="100%"
-        />
+      <SectionPanel
+        :title="employmentTitle"
+        border-type="box-1"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="employmentTrendMode"
+        @title-click="toggleEmploymentTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <DonutChart
+            v-if="!employmentTrendMode"
+            :data="employmentChartData"
+            :centerValue="totalEmployment"
+            centerLabel="毕业总数"
+            height="100%"
+          />
+          <TrendChart v-else :x-data="employmentTrendData.years" :series="employmentTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
   </DashboardLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useServiceStore } from '@/stores/service'
 import DashboardLayout from '@/components/layout/DashboardLayout.vue'
 import SectionPanel from '@/components/common/SectionPanel.vue'
 import BarChart from '@/components/charts/BarChart.vue'
 import DonutChart from '@/components/charts/DonutChart.vue'
 import PieChart from '@/components/charts/PieChart.vue'
+import TrendChart from '@/components/charts/TrendChart.vue'
 
 const serviceStore = useServiceStore()
 
@@ -112,14 +154,37 @@ const cooperationChartData = computed(() => serviceStore.cooperationChartData)
 const internationalChartData = computed(() => serviceStore.internationalChartData)
 const employmentChartData = computed(() => serviceStore.employmentChartData)
 
-const graduateEmploymentRate = computed(() => {
-  const { employment } = currentYearData.value
-  return ((employment.masterRate + employment.phdRate) / 2).toFixed(1)
-})
+const cooperationTrendData = computed(() => serviceStore.cooperationTrendData)
+const techOutputTrendData = computed(() => serviceStore.techOutputTrendData)
+const internationalTrendData = computed(() => serviceStore.internationalTrendData)
+const employmentTrendData = computed(() => serviceStore.employmentTrendData)
+
+const cooperationTrendMode = ref(false)
+const techOutputTrendMode = ref(false)
+const internationalTrendMode = ref(false)
+const employmentTrendMode = ref(false)
+
+const cooperationTitle = computed(() =>
+  cooperationTrendMode.value ? '产学研合作趋势' : `${selectedYear.value}年产学研合作`
+)
+const techOutputTitle = computed(() =>
+  techOutputTrendMode.value ? '技术服务产出趋势' : `${selectedYear.value}年技术服务产出`
+)
+const internationalTitle = computed(() =>
+  internationalTrendMode.value ? '国际交流服务趋势' : `${selectedYear.value}年国际交流服务`
+)
+const employmentTitle = computed(() =>
+  employmentTrendMode.value ? '人才服务输出趋势' : `${selectedYear.value}年人才服务输出`
+)
+
+const toggleCooperationTrend = () => { cooperationTrendMode.value = !cooperationTrendMode.value }
+const toggleTechOutputTrend = () => { techOutputTrendMode.value = !techOutputTrendMode.value }
+const toggleInternationalTrend = () => { internationalTrendMode.value = !internationalTrendMode.value }
+const toggleEmploymentTrend = () => { employmentTrendMode.value = !employmentTrendMode.value }
 
 const totalEmployment = computed(() => {
   const { employment } = currentYearData.value
-  return employment.undergraduate + employment.master + employment.phd
+  return employment.undergraduate + employment.master
 })
 
 const handleYearChange = (year: string) => {
@@ -207,7 +272,7 @@ const handleYearChange = (year: string) => {
   justify-content: center;
   align-items: center;
   gap: 16px;
-  padding: 16px;
+  padding: 16px 16px 16px 0px;
   background: rgba(12, 30, 60, 0.4);
   border-radius: var(--radius-sm);
   overflow-y: auto;
@@ -234,5 +299,15 @@ const handleYearChange = (year: string) => {
       text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
     }
   }
+}
+
+.chart-fade-enter-active,
+.chart-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.chart-fade-enter-from,
+.chart-fade-leave-to {
+  opacity: 0;
 }
 </style>

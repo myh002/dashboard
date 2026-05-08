@@ -6,20 +6,41 @@
     @yearChange="handleYearChange"
   >
     <template #left-top>
-      <SectionPanel :title="`${selectedYear}年图书馆资源构成`" border-type="box-10">
-        <DonutChart :data="libraryChartData" height="100%" />
+      <SectionPanel
+        :title="libraryTitle"
+        border-type="box-10"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="libraryTrendMode"
+        @title-click="toggleLibraryTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <DonutChart v-if="!libraryTrendMode" :data="libraryChartData" height="100%" />
+          <TrendChart v-else :x-data="libraryTrendData.years" :series="libraryTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
     <template #left-bottom>
-      <SectionPanel :title="`${selectedYear}年校园面积构成`" border-type="box-1">
-        <DonutChart
-          :data="campusChartData"
-          :centerValue="currentYearData.campus.schoolArea ?? 0"
-          centerLabel="学校面积(亩)"
-          unit="万平方米"
-          height="100%"
-        />
+      <SectionPanel
+        :title="campusTitle"
+        border-type="box-1"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="campusTrendMode"
+        @title-click="toggleCampusTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <DonutChart
+            v-if="!campusTrendMode"
+            :data="campusChartData"
+            :centerValue="currentYearData.campus.schoolArea ?? 0"
+            centerLabel="学校面积(亩)"
+            unit="万平方米"
+            height="100%"
+          />
+          <TrendChart v-else :x-data="campusTrendData.years" :series="campusTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
@@ -68,21 +89,41 @@
     </template>
 
     <template #right-top>
-      <SectionPanel :title="`${selectedYear}年科研经费来源`" border-type="box-10">
-        <PieChart :data="fundingChartData" unit="万元" height="100%" />
+      <SectionPanel
+        :title="fundingTitle"
+        border-type="box-10"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="fundingTrendMode"
+        @title-click="toggleFundingTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <PieChart v-if="!fundingTrendMode" :data="fundingChartData" unit="万元" height="100%" />
+          <TrendChart v-else :x-data="fundingTrendData.years" :series="fundingTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
     <template #right-bottom>
-      <SectionPanel :title="`${selectedYear}年仪器设备明细`" border-type="box-1">
-        <BarChart :data="equipmentDetailChartData" height="100%" />
+      <SectionPanel
+        :title="equipmentTitle"
+        border-type="box-1"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="equipmentTrendMode"
+        @title-click="toggleEquipmentTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <BarChart v-if="!equipmentTrendMode" :data="equipmentDetailChartData" height="100%" />
+          <TrendChart v-else :x-data="equipmentTrendData.years" :series="equipmentTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
   </DashboardLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useFinanceStore } from '@/stores/finance'
 import { formatNumber } from '@/utils/format'
 import DashboardLayout from '@/components/layout/DashboardLayout.vue'
@@ -90,6 +131,7 @@ import SectionPanel from '@/components/common/SectionPanel.vue'
 import BarChart from '@/components/charts/BarChart.vue'
 import DonutChart from '@/components/charts/DonutChart.vue'
 import PieChart from '@/components/charts/PieChart.vue'
+import TrendChart from '@/components/charts/TrendChart.vue'
 
 const financeStore = useFinanceStore()
 
@@ -107,6 +149,42 @@ const fundingChartData = computed(() => financeStore.fundingChartData)
 const equipmentChartData = computed(() => financeStore.equipmentChartData)
 const equipmentDetailChartData = computed(() => financeStore.equipmentDetailChartData)
 const libraryChartData = computed(() => financeStore.libraryChartData)
+
+const libraryTrendData = computed(() => financeStore.libraryTrendData)
+const campusTrendData = computed(() => financeStore.campusTrendData)
+const fundingTrendData = computed(() => financeStore.fundingTrendData)
+const equipmentTrendData = computed(() => financeStore.equipmentTrendData)
+
+const libraryTrendMode = ref(false)
+const campusTrendMode = ref(false)
+const fundingTrendMode = ref(false)
+const equipmentTrendMode = ref(false)
+
+const libraryTitle = computed(() =>
+  libraryTrendMode.value ? '图书馆资源趋势' : `${selectedYear.value}年图书馆资源构成`
+)
+const campusTitle = computed(() =>
+  campusTrendMode.value ? '校园面积趋势' : `${selectedYear.value}年校园面积构成`
+)
+const fundingTitle = computed(() =>
+  fundingTrendMode.value ? '科研经费趋势' : `${selectedYear.value}年科研经费来源`
+)
+const equipmentTitle = computed(() =>
+  equipmentTrendMode.value ? '仪器设备趋势' : `${selectedYear.value}年仪器设备明细`
+)
+
+const toggleLibraryTrend = () => {
+  libraryTrendMode.value = !libraryTrendMode.value
+}
+const toggleCampusTrend = () => {
+  campusTrendMode.value = !campusTrendMode.value
+}
+const toggleFundingTrend = () => {
+  fundingTrendMode.value = !fundingTrendMode.value
+}
+const toggleEquipmentTrend = () => {
+  equipmentTrendMode.value = !equipmentTrendMode.value
+}
 
 const handleYearChange = (year: string) => {
   financeStore.setYear(year)
@@ -193,7 +271,7 @@ const handleYearChange = (year: string) => {
   justify-content: center;
   align-items: center;
   gap: 16px;
-  padding: 16px;
+  padding: 16px 16px 16px 0px;
   background: rgba(12, 30, 60, 0.4);
   border-radius: var(--radius-sm);
   overflow-y: auto;
@@ -220,5 +298,15 @@ const handleYearChange = (year: string) => {
       text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
     }
   }
+}
+
+.chart-fade-enter-active,
+.chart-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.chart-fade-enter-from,
+.chart-fade-leave-to {
+  opacity: 0;
 }
 </style>

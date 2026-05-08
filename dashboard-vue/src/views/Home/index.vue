@@ -227,10 +227,11 @@
             </div>
             <div class="dual-right">
               <div class="chart-title">在校生培养层次</div>
-              <DonutChart
-                :data="studentLevelChartData"
-                :centerValue="talent.studentLevels.undergraduateTotal"
-                centerLabel="本专科生"
+              <DualAxisGroupedBarChart
+                :years="studentLevelTrendChartData.years"
+                :undergraduate="studentLevelTrendChartData.undergraduate"
+                :master="studentLevelTrendChartData.master"
+                :phd="studentLevelTrendChartData.phd"
                 height="100%"
               />
             </div>
@@ -314,6 +315,7 @@ import StackedAreaChart from '@/components/charts/StackedAreaChart.vue'
 import LineChart from '@/components/charts/LineChart.vue'
 import LineChartClean from '@/components/charts/LineChartClean.vue'
 import BarChart from '@/components/charts/BarChart.vue'
+import DualAxisGroupedBarChart from '@/components/charts/DualAxisGroupedBarChart.vue'
 import { UserFilled, User, Trophy, Star } from '@element-plus/icons-vue'
 
 const dataStore = useDataStore()
@@ -329,6 +331,7 @@ const talent = computed(() => dataStore.talent)
 const condition = computed(() => dataStore.condition)
 const facultyTitleTrendChartData = computed(() => dataStore.facultyTitleTrendChartData)
 const studentLevelChartData = computed(() => dataStore.studentLevelChartData)
+const studentLevelTrendChartData = computed(() => dataStore.studentLevelTrendChartData)
 
 const talentIconMap: Record<string, Component> = {
   UserFilled: markRaw(UserFilled),

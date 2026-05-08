@@ -73,6 +73,53 @@ export const useHrStore = defineStore('hr', {
         { name: '46-55岁', value: data.ageDistribution.age46to55 ?? 0 },
         { name: '56岁及以上', value: data.ageDistribution.over56 ?? 0 }
       ]
+    },
+    titleTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          { name: '正高', data: state.yearlyData.map(d => d.title?.professor ?? 0) },
+          { name: '副高', data: state.yearlyData.map(d => d.title?.associate ?? 0) },
+          { name: '中级', data: state.yearlyData.map(d => d.title?.lecturer ?? 0) },
+          { name: '初级及以下', data: state.yearlyData.map(d => d.title?.assistant ?? 0) }
+        ]
+      }
+    },
+    staffTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          { name: '专任教师', data: state.yearlyData.map(d => d.staff?.fullTime ?? 0) },
+          { name: '管理人员', data: state.yearlyData.map(d => d.staff?.management ?? 0) },
+          { name: '教辅人员', data: state.yearlyData.map(d => d.staff?.supporting ?? 0) },
+          { name: '外聘教师', data: state.yearlyData.map(d => d.staff?.external ?? 0) }
+        ]
+      }
+    },
+    educationTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          { name: '博士', data: state.yearlyData.map(d => d.education?.doctorate ?? 0) },
+          { name: '硕士', data: state.yearlyData.map(d => d.education?.master ?? 0) },
+          { name: '本科及以下', data: state.yearlyData.map(d => d.education?.bachelor ?? 0) }
+        ]
+      }
+    },
+    ageTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          { name: '35岁及以下', data: state.yearlyData.map(d => d.ageDistribution?.under35 ?? 0) },
+          { name: '36-45岁', data: state.yearlyData.map(d => d.ageDistribution?.age36to45 ?? 0) },
+          { name: '46-55岁', data: state.yearlyData.map(d => d.ageDistribution?.age46to55 ?? 0) },
+          { name: '56岁及以上', data: state.yearlyData.map(d => d.ageDistribution?.over56 ?? 0) }
+        ]
+      }
     }
   },
 

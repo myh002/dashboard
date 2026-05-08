@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { DashboardData } from '@/types'
+import type { DashboardData, StudentLevelTrendData } from '@/types'
 import {
   facultyApi,
   researchApi,
@@ -17,7 +17,7 @@ import {
  */
 
 export const useDataStore = defineStore('data', {
-  state: (): DashboardData => ({
+  state: (): DashboardData & { studentLevelTrend: StudentLevelTrendData[] } => ({
     // ===== 师资数据 =====
     faculty: {
       totalStaff: 0,
@@ -93,7 +93,10 @@ export const useDataStore = defineStore('data', {
         databaseCount: 0
       },
       equipmentTrend: []
-    }
+    },
+
+    // ===== 学生培养层次趋势数据 =====
+    studentLevelTrend: []
   }),
 
   getters: {
@@ -129,6 +132,15 @@ export const useDataStore = defineStore('data', {
         { name: '硕士生', value: s.masterTotal },
         { name: '博士生', value: s.phdTotal }
       ]
+    },
+    studentLevelTrendChartData: (state) => {
+      const trend = state.studentLevelTrend
+      return {
+        years: trend.map(item => item.year),
+        undergraduate: trend.map(item => item.undergraduate),
+        master: trend.map(item => item.master),
+        phd: trend.map(item => item.phd)
+      }
     }
   },
 
@@ -184,6 +196,17 @@ export const useDataStore = defineStore('data', {
       }
     },
     /**
+     * 从后端获取学生培养层次趋势数据
+     */
+    async fetchStudentLevelTrend() {
+      try {
+        const res = await talentApi.getStudentLevelTrend()
+        this.studentLevelTrend = res.data
+      } catch (error) {
+        console.error('获取学生培养层次趋势数据失败:', error)
+      }
+    },
+    /**
      * 从后端获取条件数据
      */
     async fetchConditionData() {
@@ -204,6 +227,7 @@ export const useDataStore = defineStore('data', {
         this.fetchDisciplineData(),
         this.fetchTalentData(),
         this.fetchConditionData(),
+        this.fetchStudentLevelTrend(),
       ])
     },
   }

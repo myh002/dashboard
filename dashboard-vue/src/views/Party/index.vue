@@ -6,19 +6,40 @@
     @yearChange="handleYearChange"
   >
     <template #left-top>
-      <SectionPanel :title="`${selectedYear}年学生规模（学历×性别）`" border-type="box-10">
-        <GroupedStudentChart :data="partyMembersChartData" height="100%" />
+      <SectionPanel
+        :title="studentScaleTitle"
+        border-type="box-10"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="studentScaleTrendMode"
+        @title-click="toggleStudentScaleTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <GroupedStudentChart v-if="!studentScaleTrendMode" :data="partyMembersChartData" height="100%" />
+          <TrendChart v-else :x-data="studentScaleTrendData.years" :series="studentScaleTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
     <template #left-bottom>
-      <SectionPanel :title="`${selectedYear}年硕博政治面貌`" border-type="box-1">
-        <DonutChart
-          :data="politicalChartData"
-          :centerValue="(currentYearData.graduatePolitical?.partyMember ?? 0) + (currentYearData.graduatePolitical?.youthLeague ?? 0)"
-          centerLabel="总人数"
-          height="100%"
-        />
+      <SectionPanel
+        :title="politicalTitle"
+        border-type="box-1"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="politicalTrendMode"
+        @title-click="togglePoliticalTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <DonutChart
+            v-if="!politicalTrendMode"
+            :data="politicalChartData"
+            :centerValue="(currentYearData.graduatePolitical?.partyMember ?? 0) + (currentYearData.graduatePolitical?.youthLeague ?? 0)"
+            centerLabel="总人数"
+            height="100%"
+          />
+          <TrendChart v-else :x-data="politicalTrendData.years" :series="politicalTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
@@ -57,40 +78,61 @@
             <p>党员队伍建设方面，党员总数达 <span class="highlight">{{ currentYearData.partyMembers.total }}</span> 人，其中本科生党员 <span class="highlight">{{ currentYearData.partyMembers.undergraduate }}</span> 人、研究生党员 <span class="highlight">{{ currentYearData.partyMembers.graduate }}</span> 人，党员队伍持续壮大。</p>
           </div>
           <div class="analysis-item">
-            <p>民主党派建设方面，各民主党派党员共计 <span class="highlight">{{ totalDemocraticParties }}</span> 人，涵盖民革、民盟、民建、民进、农工党、致公党、九三学社、台盟等八个民主党派，多党合作事业蓬勃发展。</p>
+            <p>民主党派建设方面，各民主党派党员共计 <span class="highlight">{{ totalDemocraticParties }}</span> 人，涵盖民革，民盟，民建，民进、农工党、致公党、九三学社、台盟等八个民主党派，多党合作事业蓬勃发展。</p>
           </div>
           <div class="analysis-item">
             <p>青年群众方面，共青团员达 <span class="highlight">{{ totalYouthLeague }}</span> 人，其中本科生共青团员 <span class="highlight">{{ currentYearData.youthLeague.undergraduate }}</span> 人、研究生共青团员 <span class="highlight">{{ currentYearData.youthLeague.graduate }}</span> 人，青年群众基础牢固。</p>
           </div>
           <div class="analysis-item">
-            <p>特殊群体关怀方面，少数民族学生 <span class="highlight">{{ currentYearData.specialGroups.minority }}</span> 人、残疾学生 <span class="highlight">{{ currentYearData.specialGroups.disabled }}</span> 人，国家级课程思政教学团队 <span class="highlight">{{ currentYearData.ideologicalTeams.nationalTeam }}</span> 个、省部级 <span class="highlight">{{ currentYearData.ideologicalTeams.provincialTeam }}</span> 个，立德树人成效显著。</p>
+            <p>特殊群体关怀方面，少数民族学生 <span class="highlight">{{ currentYearData.specialGroups.minority }}</span> 人、残疾学生 <span class="highlight">{{ currentYearData.specialGroups.disabled }}</span> 人，国家级课程思政教学团队 <span class="highlight">{{ currentYearData.ideologicalTeams.nationalTeam }}</span> 个，省部级 <span class="highlight">{{ currentYearData.ideologicalTeams.provincialTeam }}</span> 个，立德树人成效显著。</p>
           </div>
         </div>
       </div>
     </template>
 
     <template #right-top>
-      <SectionPanel :title="`${selectedYear}年民主党派构成`" border-type="box-10">
-        <PieChart :data="democraticPartiesChartData" height="100%" />
+      <SectionPanel
+        :title="democraticTitle"
+        border-type="box-10"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="democraticTrendMode"
+        @title-click="toggleDemocraticTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <PieChart v-if="!democraticTrendMode" :data="democraticPartiesChartData" height="100%" />
+          <TrendChart v-else :x-data="democraticTrendData.years" :series="democraticTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
     <template #right-bottom>
-      <SectionPanel :title="`${selectedYear}年特殊群体构成`" border-type="box-1">
-        <PieChart :data="specialGroupsChartData" height="100%" />
+      <SectionPanel
+        :title="specialGroupsTitle"
+        border-type="box-1"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="specialGroupsTrendMode"
+        @title-click="toggleSpecialGroupsTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <PieChart v-if="!specialGroupsTrendMode" :data="specialGroupsChartData" height="100%" />
+          <TrendChart v-else :x-data="specialGroupsTrendData.years" :series="specialGroupsTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
   </DashboardLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { usePartyStore } from '@/stores/party'
 import DashboardLayout from '@/components/layout/DashboardLayout.vue'
 import SectionPanel from '@/components/common/SectionPanel.vue'
 import GroupedStudentChart from '@/components/charts/GroupedStudentChart.vue'
 import DonutChart from '@/components/charts/DonutChart.vue'
 import PieChart from '@/components/charts/PieChart.vue'
+import TrendChart from '@/components/charts/TrendChart.vue'
 
 const partyStore = usePartyStore()
 
@@ -106,6 +148,34 @@ const partyMembersChartData = computed(() => partyStore.partyMembersChartData)
 const politicalChartData = computed(() => partyStore.politicalChartData)
 const democraticPartiesChartData = computed(() => partyStore.democraticPartiesChartData)
 const specialGroupsChartData = computed(() => partyStore.specialGroupsChartData)
+
+const studentScaleTrendData = computed(() => partyStore.studentScaleTrendData)
+const politicalTrendData = computed(() => partyStore.politicalTrendData)
+const democraticTrendData = computed(() => partyStore.democraticTrendData)
+const specialGroupsTrendData = computed(() => partyStore.specialGroupsTrendData)
+
+const studentScaleTrendMode = ref(false)
+const politicalTrendMode = ref(false)
+const democraticTrendMode = ref(false)
+const specialGroupsTrendMode = ref(false)
+
+const studentScaleTitle = computed(() =>
+  studentScaleTrendMode.value ? '学生规模趋势' : `${selectedYear.value}年学生规模`
+)
+const politicalTitle = computed(() =>
+  politicalTrendMode.value ? '硕博政治面貌趋势' : `${selectedYear.value}年硕博政治面貌`
+)
+const democraticTitle = computed(() =>
+  democraticTrendMode.value ? '民主党派趋势' : `${selectedYear.value}年民主党派构成`
+)
+const specialGroupsTitle = computed(() =>
+  specialGroupsTrendMode.value ? '特殊群体趋势' : `${selectedYear.value}年特殊群体构成`
+)
+
+const toggleStudentScaleTrend = () => { studentScaleTrendMode.value = !studentScaleTrendMode.value }
+const togglePoliticalTrend = () => { politicalTrendMode.value = !politicalTrendMode.value }
+const toggleDemocraticTrend = () => { democraticTrendMode.value = !democraticTrendMode.value }
+const toggleSpecialGroupsTrend = () => { specialGroupsTrendMode.value = !specialGroupsTrendMode.value }
 
 const totalYouthLeague = computed(() => {
   const { youthLeague } = currentYearData.value
@@ -209,7 +279,7 @@ const handleYearChange = (year: string) => {
   justify-content: center;
   align-items: center;
   gap: 16px;
-  padding: 16px;
+  padding: 16px 16px 16px 0px;
   background: rgba(12, 30, 60, 0.4);
   border-radius: var(--radius-sm);
   overflow-y: auto;
@@ -236,5 +306,15 @@ const handleYearChange = (year: string) => {
       text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
     }
   }
+}
+
+.chart-fade-enter-active,
+.chart-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.chart-fade-enter-from,
+.chart-fade-leave-to {
+  opacity: 0;
 }
 </style>

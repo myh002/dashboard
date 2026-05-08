@@ -75,6 +75,94 @@ export const useDisciplineStore = defineStore('discipline', {
         { name: '省级教改工程项目', value: ta?.provincialReformProject ?? 0 },
         { name: '校级教改工程项目', value: ta?.schoolReformProject ?? 0 }
       ]
+    },
+    disciplineTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '省级特色重点学科',
+            data: state.yearlyData.map(d => d.disciplines?.provincialKey ?? 0)
+          },
+          {
+            name: '省级重点学科',
+            data: state.yearlyData.map(d => d.disciplines?.provincialEmphasis ?? 0)
+          },
+          {
+            name: '一流建设学科',
+            data: state.yearlyData.map(d => d.disciplines?.firstClassConstruction ?? 0)
+          },
+          {
+            name: '一流学科',
+            data: state.yearlyData.map(d => d.disciplines?.firstClass ?? 0)
+          }
+        ]
+      }
+    },
+    majorTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '本科生（男）',
+            data: state.yearlyData.map(d => d.majors?.undergraduateMale ?? 0)
+          },
+          {
+            name: '本科生（女）',
+            data: state.yearlyData.map(d => d.majors?.undergraduateFemale ?? 0)
+          },
+          {
+            name: '本科生总数',
+            data: state.yearlyData.map(d => d.majors?.undergraduateTotal ?? 0)
+          }
+        ]
+      }
+    },
+    titleTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '正高级职称',
+            data: state.yearlyData.map(d => d.titleDistribution?.professorCount ?? 0)
+          },
+          {
+            name: '副高级职称',
+            data: state.yearlyData.map(d => d.titleDistribution?.associateProfessorCount ?? 0)
+          },
+          {
+            name: '中级职称',
+            data: state.yearlyData.map(d => d.titleDistribution?.lecturerCount ?? 0)
+          },
+          {
+            name: '初级及其他',
+            data: state.yearlyData.map(d => d.titleDistribution?.juniorCount ?? 0)
+          }
+        ]
+      }
+    },
+    teachingTrendData: (state) => {
+      const years = state.yearlyData.map(d => d.year)
+      return {
+        years,
+        series: [
+          {
+            name: '省级教学成果奖',
+            data: state.yearlyData.map(d => d.teachingAchievements?.provincialTeachingAward ?? 0)
+          },
+          {
+            name: '省级教改工程项目',
+            data: state.yearlyData.map(d => d.teachingAchievements?.provincialReformProject ?? 0)
+          },
+          {
+            name: '校级教改工程项目',
+            data: state.yearlyData.map(d => d.teachingAchievements?.schoolReformProject ?? 0)
+          }
+        ]
+      }
     }
   },
 

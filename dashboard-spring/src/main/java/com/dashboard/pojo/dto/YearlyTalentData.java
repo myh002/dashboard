@@ -18,6 +18,8 @@ public class YearlyTalentData {
         private Integer female;
         private Integer graduates;
         private Double graduateRate;
+        private Double grantRate;
+        private Integer degreeGranted;
         private Integer employment;
         private Double employmentRate;
     }
@@ -30,6 +32,8 @@ public class YearlyTalentData {
         private Integer supervisors;
         private Integer graduates;
         private Double graduateRate;
+        private Double grantRate;
+        private Integer degreeGranted;
         private Integer employment;
         private Double employmentRate;
     }
@@ -55,6 +59,8 @@ public class YearlyTalentData {
         private Integer schoolReform;
         private Integer teachingAward;
         private Integer practiceBases;
+        private Integer nationalTeams;
+        private Integer provincialTeams;
     }
 
     @Data

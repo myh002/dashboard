@@ -119,6 +119,14 @@ export interface TalentData {
   studentLevels: StudentLevels
 }
 
+/** 在校生培养层次趋势数据 */
+export interface StudentLevelTrendData {
+  year: string
+  undergraduate: number
+  master: number
+  phd: number
+}
+
 /** 资产概况 */
 export interface AssetOverview {
   teachingResearchArea: number
@@ -379,6 +387,8 @@ export interface CooperationData {
   horizontalFunding: number
   inventionPatents: number
   utilityPatents: number
+  designPatents: number
+  varieties: number
   standards: number
   software: number
 }
@@ -388,9 +398,8 @@ export interface EmploymentData {
   undergraduate: number
   undergraduateRate: number
   master: number
-  masterRate: number
   phd: number
-  phdRate: number
+  graduateRate: number
 }
 
 /** 国际交流数据 */
@@ -502,6 +511,8 @@ export interface UndergraduateData {
   female: number
   graduates: number
   graduateRate: number
+  grantRate: number
+  degreeGranted: number
   employment: number
   employmentRate: number
 }
@@ -514,6 +525,8 @@ export interface MasterData {
   supervisors: number
   graduates: number
   graduateRate: number
+  grantRate: number
+  degreeGranted: number
   employment: number
   employmentRate: number
 }
@@ -539,6 +552,8 @@ export interface TeachingData {
   schoolReform: number
   teachingAward: number
   practiceBases: number
+  nationalTeams: number
+  provincialTeams: number
 }
 
 /** 国际化数据 */

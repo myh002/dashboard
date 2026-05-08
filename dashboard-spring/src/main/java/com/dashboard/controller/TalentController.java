@@ -3,6 +3,7 @@ package com.dashboard.controller;
 import com.dashboard.common.ResultData;
 import com.dashboard.pojo.dto.TalentData;
 import com.dashboard.pojo.dto.YearlyTalentData;
+import com.dashboard.pojo.dto.StudentLevelTrendData;
 import com.dashboard.service.TalentService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -30,5 +31,10 @@ public class TalentController {
     @GetMapping("/yearly")
     public ResultData<List<YearlyTalentData>> getYearlyData() {
         return ResultData.success(talentService.getYearlyData());
+    }
+
+    @GetMapping("/student-level-trend")
+    public ResultData<List<StudentLevelTrendData>> getStudentLevelTrend() {
+        return ResultData.success(talentService.getStudentLevelTrend());
     }
 }

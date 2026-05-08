@@ -13,6 +13,7 @@ import type {
   YearlyServiceData,
   YearlyDisciplineData,
   YearlyTalentData,
+  StudentLevelTrendData,
 } from '@/types'
 
 export const facultyApi = {
@@ -33,6 +34,7 @@ export const disciplineApi = {
 export const talentApi = {
   getData: () => request.get<TalentData>('/talent'),
   getYearlyData: () => request.get<YearlyTalentData[]>('/talent/yearly'),
+  getStudentLevelTrend: () => request.get<StudentLevelTrendData[]>('/talent/student-level-trend'),
 }
 
 export const conditionApi = {

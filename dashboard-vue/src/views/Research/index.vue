@@ -6,20 +6,41 @@
     @yearChange="handleYearChange"
   >
     <template #left-top>
-      <SectionPanel :title="`${selectedYear}年各级项目数`" border-type="box-10">
-        <BarChart :data="projectChartData" height="100%" />
+      <SectionPanel
+        :title="projectTitle"
+        border-type="box-10"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="projectTrendMode"
+        @title-click="toggleProjectTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <BarChart v-if="!projectTrendMode" :data="projectChartData" height="100%" />
+          <TrendChart v-else :x-data="projectTrendData.years" :series="projectTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
     <template #left-bottom>
-      <SectionPanel :title="`${selectedYear}年科研经费构成`" border-type="box-1">
-        <DonutChart
-          :data="fundingChartData"
-          :centerValue="currentYearData.funding.total"
-          centerLabel="总经费(万)"
-          unit="万元"
-          height="100%"
-        />
+      <SectionPanel
+        :title="fundingTitle"
+        border-type="box-1"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="fundingTrendMode"
+        @title-click="toggleFundingTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <DonutChart
+            v-if="!fundingTrendMode"
+            :data="fundingChartData"
+            :centerValue="currentYearData.funding.total"
+            centerLabel="总经费(万)"
+            unit="万元"
+            height="100%"
+          />
+          <TrendChart v-else :x-data="fundingTrendData.years" :series="fundingTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
@@ -71,21 +92,41 @@
     </template>
 
     <template #right-top>
-      <SectionPanel :title="`${selectedYear}年论文分布`" border-type="box-10">
-        <HorizontalBarChart :data="paperChartData" height="100%" />
+      <SectionPanel
+        :title="paperTitle"
+        border-type="box-10"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="paperTrendMode"
+        @title-click="togglePaperTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <HorizontalBarChart v-if="!paperTrendMode" :data="paperChartData" height="100%" />
+          <TrendChart v-else :x-data="paperTrendData.years" :series="paperTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
 
     <template #right-bottom>
-      <SectionPanel :title="`${selectedYear}年知识产权构成`" border-type="box-1">
-        <PieChart :data="patentChartData" unit="项" height="100%" />
+      <SectionPanel
+        :title="patentTitle"
+        border-type="box-1"
+        clickable
+        show-mode-indicator
+        :is-trend-mode="patentTrendMode"
+        @title-click="togglePatentTrend"
+      >
+        <Transition name="chart-fade" mode="out-in">
+          <PieChart v-if="!patentTrendMode" :data="patentChartData" unit="项" height="100%" />
+          <TrendChart v-else :x-data="patentTrendData.years" :series="patentTrendData.series" height="100%" />
+        </Transition>
       </SectionPanel>
     </template>
   </DashboardLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, watch, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useResearchStore } from '@/stores/research'
 import { formatNumber } from '@/utils/format'
 import DashboardLayout from '@/components/layout/DashboardLayout.vue'
@@ -94,6 +135,7 @@ import BarChart from '@/components/charts/BarChart.vue'
 import DonutChart from '@/components/charts/DonutChart.vue'
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart.vue'
 import PieChart from '@/components/charts/PieChart.vue'
+import TrendChart from '@/components/charts/TrendChart.vue'
 
 const researchStore = useResearchStore()
 
@@ -109,6 +151,42 @@ const projectChartData = computed(() => researchStore.projectChartData)
 const fundingChartData = computed(() => researchStore.fundingChartData)
 const paperChartData = computed(() => researchStore.paperChartData)
 const patentChartData = computed(() => researchStore.patentChartData)
+
+const projectTrendData = computed(() => researchStore.projectTrendData)
+const fundingTrendData = computed(() => researchStore.fundingTrendData)
+const paperTrendData = computed(() => researchStore.paperTrendData)
+const patentTrendData = computed(() => researchStore.patentTrendData)
+
+const projectTrendMode = ref(false)
+const fundingTrendMode = ref(false)
+const paperTrendMode = ref(false)
+const patentTrendMode = ref(false)
+
+const projectTitle = computed(() =>
+  projectTrendMode.value ? '各级项目趋势' : `${selectedYear.value}年各级项目数`
+)
+const fundingTitle = computed(() =>
+  fundingTrendMode.value ? '科研经费趋势' : `${selectedYear.value}年科研经费构成`
+)
+const paperTitle = computed(() =>
+  paperTrendMode.value ? '论文分布趋势' : `${selectedYear.value}年论文分布`
+)
+const patentTitle = computed(() =>
+  patentTrendMode.value ? '知识产权趋势' : `${selectedYear.value}年知识产权构成`
+)
+
+const toggleProjectTrend = () => {
+  projectTrendMode.value = !projectTrendMode.value
+}
+const toggleFundingTrend = () => {
+  fundingTrendMode.value = !fundingTrendMode.value
+}
+const togglePaperTrend = () => {
+  paperTrendMode.value = !paperTrendMode.value
+}
+const togglePatentTrend = () => {
+  patentTrendMode.value = !patentTrendMode.value
+}
 
 const fundingRatio = computed(() => {
   const { funding } = currentYearData.value
@@ -210,7 +288,7 @@ const handleYearChange = (year: string) => {
   justify-content: center;
   align-items: center;
   gap: 16px;
-  padding: 16px;
+  padding: 16px 16px 16px 0px;
   background: rgba(12, 30, 60, 0.4);
   border-radius: var(--radius-sm);
   overflow-y: auto;
@@ -237,5 +315,15 @@ const handleYearChange = (year: string) => {
       text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
     }
   }
+}
+
+.chart-fade-enter-active,
+.chart-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.chart-fade-enter-from,
+.chart-fade-leave-to {
+  opacity: 0;
 }
 </style>
